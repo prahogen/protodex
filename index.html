@@ -23,6 +23,20 @@
     --sans:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
     --mono:ui-monospace,"Cascadia Mono","SFMono-Regular",Consolas,monospace;
   }
+
+  [data-theme="dark"]{
+    --bg:#0f1114;
+    --surface:#16191e;
+    --surface-2:#1e2228;
+    --ink:#e7e9ec;
+    --ink-soft:#a8adb2;
+    --muted:#6e737a;
+    --line:#2c3138;
+    --line-strong:#3a3f46;
+    --accent:#2ec4b6;
+    --accent-soft:#163733;
+    --danger:#e06c5c;
+  }
   *{box-sizing:border-box}
   [hidden]{display:none !important}
   html{scroll-behavior:smooth}
@@ -641,6 +655,9 @@
       <span class="brand-name">Protodex<span>.</span></span>
       <span class="brand-tag">Protogen Index</span>
     </a>
+    <button class="btn btn-ghost" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 1 21 12.79"/></svg>
+    </button>
     <div class="nav-drop" id="navDrop">
       <button class="nav-drop-btn" id="navDropBtn" type="button"
               aria-haspopup="true" aria-expanded="false" aria-controls="navMenu">
@@ -2262,6 +2279,41 @@
     toast("Exported protodex.json");
   });
 
+  /* ---------- theme ---------- */
+  const THEME_KEY = "protodex.theme";
+  const themeToggle = $("#themeToggle");
+
+  function applyTheme(theme){
+    document.documentElement.setAttribute("data-theme", theme);
+    try { localStorage.setItem(THEME_KEY, theme); } catch (err){ /* noop */ }
+    const icon = themeToggle.querySelector("svg");
+    if (theme === "dark"){
+      icon.innerHTML = '<path d="M12 3c4.97 0 9 4.03 9 9s-4.03 9-9 9-9-4.03-9-9 4.03-9 9-9z"/><path d="M12 19c3.87 0 7-3.13 7-7s-3.13-7-7-7-7 3.13-7 7 3.13 7 7 7z"/><circle cx="12" cy="12" r="3"/>';
+    } else {
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 1 21 12.79"/>';
+    }
+  }
+
+  function getSavedTheme(){
+    try { return localStorage.getItem(THEME_KEY); } catch (err){ return null; }
+  }
+
+  function initTheme(){
+    const saved = getSavedTheme();
+    if (saved === "dark" || saved === "light"){
+      applyTheme(saved);
+    } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches){
+      applyTheme("dark");
+    } else {
+      applyTheme("light");
+    }
+  }
+
+  themeToggle.addEventListener("click", () => {
+    const current = document.documentElement.getAttribute("data-theme");
+    applyTheme(current === "dark" ? "light" : "dark");
+  });
+
   /* ---------- boot ---------- */
   const headerEl = document.querySelector("header.site");
   const mainEl = document.querySelector("main");
@@ -2290,6 +2342,7 @@
     document.body.style.overflow = "";
     if (headerEl) headerEl.hidden = false;
     if (mainEl) mainEl.hidden = false;
+    initTheme();
     startApp();
   });
 
@@ -2300,6 +2353,7 @@
     document.body.style.overflow = "";
     if (headerEl) headerEl.hidden = false;
     if (mainEl) mainEl.hidden = false;
+    initTheme();
     startApp();
   });
 
@@ -2312,12 +2366,14 @@
   });
 
   if (!termsAccepted()){
+    initTheme();
     termsModal.classList.add("open");
     termsModal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
     if (headerEl) headerEl.hidden = true;
     if (mainEl) mainEl.hidden = true;
   } else {
+    initTheme();
     startApp();
   }
 })();
