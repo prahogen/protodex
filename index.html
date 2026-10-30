@@ -1,0 +1,2271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Protodex — Protogen Character Index</title>
+<meta name="description" content="Protodex is a minimal index of Protogen characters with Instagram and Telegram contacts." />
+<style>
+  :root{
+    --bg:#f7f7f4;
+    --surface:#ffffff;
+    --surface-2:#f1f1ec;
+    --ink:#15171b;
+    --ink-soft:#4a4d54;
+    --muted:#8a8d94;
+    --line:#e6e6df;
+    --line-strong:#d5d5cc;
+    --accent:#0f766e;
+    --accent-soft:#e8f4f1;
+    --danger:#b42318;
+    --radius:16px;
+    --shadow:0 18px 40px -24px rgba(21,23,27,.35);
+    --sans:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    --mono:ui-monospace,"Cascadia Mono","SFMono-Regular",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none !important}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);font-size:15px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:#d9ece8}
+  a{color:inherit}
+  button{font-family:inherit}
+  h1,h2,h3,h4{letter-spacing:-.02em}
+
+  ::-webkit-scrollbar{width:11px;height:11px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:#d8d8d0;border:3px solid var(--bg);border-radius:99px}
+  ::-webkit-scrollbar-thumb:hover{background:#c2c2b9}
+
+  .wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+
+  /* ---------- header ---------- */
+  header.site{
+    position:sticky;top:0;z-index:60;
+    background:rgba(247,247,244,.86);
+    backdrop-filter:blur(14px) saturate(1.4);
+    border-bottom:1px solid var(--line);
+  }
+  .head-row{display:flex;align-items:center;gap:16px;padding:14px 0;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex:none}
+  .brand-mark{
+    width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff;
+    display:grid;place-items:center;font-weight:600;font-size:14px;letter-spacing:-.04em;
+  }
+  .brand-name{font-size:1.12rem;font-weight:600;letter-spacing:-.03em}
+  .brand-name span{color:var(--accent)}
+  .brand-tag{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--muted);
+    border-left:1px solid var(--line-strong);padding-left:10px;margin-left:2px;text-transform:uppercase;
+  }
+  .head-spacer{flex:1 1 20px}
+
+  .search{position:relative;flex:1 1 260px;max-width:380px}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted)}
+  .search input{
+    width:100%;padding:9px 13px 9px 36px;
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:999px;
+    font-family:var(--sans);font-size:13.5px;color:var(--ink);outline:none;
+    transition:border-color .18s, box-shadow .18s;
+  }
+  .search input::placeholder{color:#a2a5ab}
+  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(15,118,110,.10)}
+  .search kbd{
+    position:absolute;right:11px;top:50%;transform:translateY(-50%);
+    font-family:var(--mono);font-size:10px;color:var(--muted);
+    border:1px solid var(--line);border-radius:5px;padding:1px 5px;background:var(--surface-2);
+  }
+
+  /* ---------- nav dropdown ---------- */
+  .nav-drop{position:relative;flex:none}
+  .nav-drop-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:7px 11px;
+    background:none;border:1px solid transparent;border-radius:999px;
+    font-family:var(--sans);font-size:12.5px;color:var(--muted);cursor:pointer;
+    transition:color .16s, background .16s, border-color .16s;
+  }
+  .nav-drop-btn:hover{color:var(--ink);background:var(--surface-2)}
+  .nav-drop-btn[aria-expanded="true"]{color:var(--ink);background:var(--surface-2);border-color:var(--line)}
+  .nav-drop-btn svg{width:11px;height:11px;transition:transform .16s}
+  .nav-drop-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+  .nav-drop-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  .nav-menu{
+    position:absolute;top:calc(100% + 8px);left:0;z-index:80;min-width:184px;
+    display:flex;flex-direction:column;gap:1px;padding:6px;
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    box-shadow:var(--shadow);animation:menuIn .14s ease both;
+  }
+  @keyframes menuIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .nav-menu[hidden]{display:none}
+  .nav-menu a{
+    display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;
+    font-size:12.5px;color:var(--ink-soft);text-decoration:none;transition:.14s;
+  }
+  .nav-menu a:hover{background:var(--surface-2);color:var(--ink)}
+  .nav-menu a.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  .nav-menu a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .nav-menu .hintline{
+    padding:6px 10px 3px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--muted);border-top:1px solid var(--line);margin-top:4px;
+  }
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    padding:9px 15px;border-radius:999px;border:1px solid transparent;
+    font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;
+    transition:background .18s, border-color .18s, color .18s, transform .18s, box-shadow .18s;
+    text-decoration:none;
+  }
+  .btn svg{width:14px;height:14px}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{background:#000;transform:translateY(-1px);box-shadow:var(--shadow)}
+  .btn-ghost{background:var(--surface);border-color:var(--line-strong);color:var(--ink-soft)}
+  .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink)}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-danger{background:var(--surface);border-color:#e6cfcb;color:var(--danger)}
+  .btn-danger:hover{background:#fdf3f2;border-color:#dcb3ad}
+  .btn.small{padding:7px 12px;font-size:12px}
+  .btn[aria-disabled="true"]{opacity:.55;cursor:default;pointer-events:none}
+
+  /* ---------- cookie consent ---------- */
+  .cookie-banner{
+    border-top:1px solid var(--line);background:var(--surface);color:var(--ink-soft);
+    font-size:12.5px;line-height:1.55;padding:10px 0;text-align:center
+  }
+  .cookie-banner p{margin:0 0 8px;max-width:64ch;margin-left:auto;margin-right:auto}
+  .cookie-banner a{color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+  .cookie-banner .actions{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap}
+
+  /* ---------- terms modal ---------- */
+  .checkbox{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+  .checkbox input{width:14px;height:14px;accent-color:var(--accent);margin:0}
+  .checkbox span{user-select:none}
+
+  /* ---------- toolbar ---------- */
+  .toolbar{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:16px 0 6px;
+  }
+  .count{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .count b{color:var(--ink);font-weight:600}
+  .toolbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .select-wrap{position:relative}
+  .select-wrap select{
+    appearance:none;padding:7px 30px 7px 12px;border-radius:999px;
+    border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-soft);
+    font-family:var(--sans);font-size:12.5px;cursor:pointer;outline:none;
+    transition:border-color .18s;
+  }
+  .select-wrap select:hover{border-color:var(--ink-soft);color:var(--ink)}
+  .select-wrap select:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(15,118,110,.10)}
+  .select-wrap::after{
+    content:"";position:absolute;right:12px;top:50%;width:6px;height:6px;
+    border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);
+    transform:translateY(-70%) rotate(45deg);pointer-events:none;
+  }
+
+  /* ---------- grid ---------- */
+  main{padding:14px 0 72px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:18px}
+  .card{
+    position:relative;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);overflow:hidden;
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    animation:rise .35s ease both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+  .card-hit{
+    position:absolute;inset:0;z-index:1;border:0;background:none;cursor:pointer;border-radius:var(--radius);
+  }
+  .card-hit:focus-visible{outline:2px solid var(--accent);outline-offset:-4px}
+  .card:hover .card-hit:focus-visible{outline-offset:-4px}
+
+  .media{
+    position:relative;aspect-ratio:1/1;background:var(--surface-2);
+    display:grid;place-items:center;overflow:hidden;
+  }
+  .media img{width:100%;height:100%;object-fit:cover;display:block}
+  .media.na{
+    background-color:var(--surface-2);
+    background-image:repeating-linear-gradient(45deg,transparent 0 9px,rgba(21,23,27,.028) 9px 10px);
+  }
+  .media.na .na-label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.22em;color:#a8a8a0;
+    border:1px solid #dcdcd4;border-radius:6px;padding:4px 8px;background:rgba(255,255,255,.6);
+  }
+  .card:hover .media img{transform:scale(1.02)}
+  .media img{transition:transform .45s ease}
+
+  .card-info{padding:13px 15px 15px}
+  .name-row{display:flex;align-items:center;gap:8px;min-width:0}
+  .name-row h3{
+    margin:0;font-size:15px;font-weight:600;letter-spacing:-.015em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
+  }
+  .socials{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none;position:relative;z-index:3}
+  .social{
+    display:grid;place-items:center;width:26px;height:26px;border-radius:50%;
+    color:#9c9c94;transition:color .16s, background .16s;text-decoration:none;
+  }
+  .social:hover{color:var(--ink);background:var(--surface-2)}
+  .social svg{width:14px;height:14px}
+  .social:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+  .sub{
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+    margin-top:5px;font-size:12px;color:var(--muted);
+  }
+  .sub .id{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:#9a9a92}
+  .sub .dot{color:#cfcfc7}
+  .cc{
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;font-weight:600;
+    color:var(--ink-soft);background:var(--surface-2);border:1px solid var(--line);
+    border-radius:4px;padding:1px 4px;line-height:1.4;
+  }
+  .sub .owner{color:#a5a8ae}
+
+  .empty{
+    grid-column:1/-1;text-align:center;padding:64px 20px;
+    border:1px dashed var(--line-strong);border-radius:var(--radius);
+    color:var(--muted);font-size:13.5px;background:rgba(255,255,255,.5);
+  }
+  .empty b{display:block;color:var(--ink);font-size:15px;font-weight:600;margin-bottom:6px;letter-spacing:-.01em}
+
+  /* ---------- discovery ---------- */
+  .discovery{padding:28px 0 80px;min-height:calc(100vh - 190px)}
+  .discovery-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .discovery-head h1{margin:0;font-size:1.7rem;font-weight:650;letter-spacing:-.03em}
+  .discovery-head p{margin:4px 0 0;font-size:13px;color:var(--muted);max-width:56ch}
+  .discovery-tools{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .discovery-tools .count{white-space:nowrap}
+
+  /* ---------- modal ---------- */
+  .modal{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal.open{display:flex}
+  .modal-backdrop{position:absolute;inset:0;background:rgba(24,26,30,.32);backdrop-filter:blur(4px);animation:fade .18s both}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .modal-panel{
+    position:relative;z-index:1;width:min(880px,100%);max-height:min(90vh,860px);overflow:auto;
+    background:var(--surface);border:1px solid var(--line);border-radius:20px;
+    box-shadow:0 40px 90px -30px rgba(21,23,27,.45);
+    animation:modalIn .22s ease both;
+  }
+  @keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(.995)}to{opacity:1;transform:none}}
+  .modal-panel.narrow{width:min(640px,100%)}
+  .modal-close{
+    position:absolute;top:14px;right:14px;z-index:5;width:32px;height:32px;
+    border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.9);
+    color:var(--ink-soft);display:grid;place-items:center;cursor:pointer;font-size:15px;
+    transition:.16s;
+  }
+  .modal-close:hover{background:var(--surface-2);color:var(--ink)}
+
+  .detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .d-media{position:relative;background:var(--surface-2);min-height:340px;display:grid;place-items:center}
+  .d-media img{width:100%;height:100%;object-fit:contain;display:block}
+  .d-media.na{
+    background-image:repeating-linear-gradient(45deg,transparent 0 11px,rgba(21,23,27,.028) 11px 12px);
+    border-right:1px solid var(--line);
+  }
+  .d-media.na .na-label{
+    font-family:var(--mono);font-size:13px;letter-spacing:.26em;color:#a8a8a0;
+    border:1px solid #dcdcd4;border-radius:8px;padding:7px 12px;background:rgba(255,255,255,.7);
+  }
+  .d-media.slideshow{overflow:hidden}
+  .slide-arrow{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+    width:36px;height:36px;border-radius:50%;border:1px solid rgba(21,23,27,.12);
+    background:rgba(255,255,255,.9);color:var(--ink);display:grid;place-items:center;
+    cursor:pointer;transition:background .16s, border-color .16s, transform .16s;
+    backdrop-filter:blur(6px);
+  }
+  .slide-arrow:hover{background:#fff;border-color:rgba(21,23,27,.24);transform:translateY(-50%) scale(1.04)}
+  .slide-arrow:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .slide-arrow.prev{left:12px}
+  .slide-arrow.next{right:12px}
+  .slide-arrow svg{width:16px;height:16px}
+  .slide-bar{
+    position:absolute;left:12px;right:12px;bottom:12px;z-index:3;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    pointer-events:none;
+  }
+  .slide-count{
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#fff;
+    background:rgba(21,23,27,.68);border-radius:999px;padding:4px 9px;
+    backdrop-filter:blur(6px);
+  }
+  .slide-dots{display:flex;align-items:center;gap:5px;pointer-events:auto}
+  .slide-dot{
+    width:7px;height:7px;border-radius:999px;border:0;padding:0;
+    background:rgba(255,255,255,.55);box-shadow:0 0 0 1px rgba(21,23,27,.16);
+    cursor:pointer;transition:width .16s, background .16s;
+  }
+  .slide-dot:hover{background:rgba(255,255,255,.85)}
+  .slide-dot.active{width:18px;background:#fff}
+  .slide-dot:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .media-count{
+    position:absolute;right:8px;bottom:8px;z-index:2;pointer-events:none;
+    font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:#fff;
+    background:rgba(21,23,27,.72);border-radius:999px;padding:2px 7px;
+    backdrop-filter:blur(4px);
+  }
+  .d-body{padding:32px 32px 28px;display:flex;flex-direction:column;min-width:0}
+  .d-id{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);margin-bottom:8px}
+  .d-body h2{margin:0 0 8px;font-size:clamp(1.45rem,2.6vw,1.9rem);font-weight:650;letter-spacing:-.03em;line-height:1.15;word-break:break-word}
+  .d-sub{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);margin-bottom:22px}
+  .d-sub .dot{color:#cfcfc7}
+  .d-sub .owner{color:var(--muted)}
+
+  .d-links{display:flex;flex-direction:column;gap:7px;margin-bottom:24px}
+  .slink{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;
+    border:1px solid var(--line);border-radius:10px;background:var(--surface);
+    font-size:13px;color:var(--ink-soft);text-decoration:none;transition:.16s;
+  }
+  .slink:hover{border-color:var(--line-strong);background:var(--surface-2);color:var(--ink)}
+  .slink svg{width:16px;height:16px;flex:none;color:var(--ink)}
+  .slink .lbl{color:var(--muted);font-size:12px}
+  .slink .handle{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .no-links{font-size:13px;color:var(--muted);padding:10px 0 24px}
+
+  .d-section{border-top:1px solid var(--line);padding-top:18px;margin-bottom:auto}
+  .d-section h4{margin:0 0 6px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .d-section p{margin:0;font-size:13.5px;line-height:1.65;color:var(--ink-soft);white-space:pre-wrap;word-break:break-word}
+  .d-actions{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+
+  /* ---------- form ---------- */
+  .form-wrap{padding:30px}
+  .form-head{margin-bottom:22px}
+  .form-head h2{margin:0;font-size:1.25rem;font-weight:650;letter-spacing:-.025em}
+  .form-head p{margin:5px 0 0;font-size:12.5px;color:var(--muted)}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .field.full{grid-column:1/-1}
+  .field label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .field label .req{color:var(--accent)}
+  .field input,.field textarea,.field select{
+    width:100%;padding:9px 12px;background:var(--surface);color:var(--ink);
+    border:1px solid var(--line-strong);border-radius:10px;font-family:var(--sans);font-size:13.5px;
+    outline:none;transition:border-color .16s, box-shadow .16s;
+  }
+  .field select{appearance:none;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,#8a8d94 50%),linear-gradient(135deg,#8a8d94 50%,transparent 50%);background-position:calc(100% - 17px) 18px,calc(100% - 12px) 18px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px}
+  .field textarea{resize:vertical;min-height:80px;line-height:1.55}
+  .field input::placeholder,.field textarea::placeholder{color:#adafb4}
+  .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(15,118,110,.09)}
+  .hint{font-size:11.5px;color:var(--muted);margin-top:-2px}
+  .form-error{display:none;font-size:11.5px;color:var(--danger);font-weight:500}
+  .form-error.show{display:block}
+  .form-foot{display:flex;justify-content:flex-end;gap:9px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .form-legal{font-size:11.5px;line-height:1.6;color:var(--muted);margin:18px 0 0}
+  .form-legal a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px}
+  .form-legal a:hover{color:var(--ink)}
+
+  .upload{
+    display:flex;align-items:center;justify-content:center;gap:12px;min-height:90px;
+    padding:14px;border:1px dashed var(--line-strong);border-radius:12px;
+    background:var(--surface-2);cursor:pointer;text-align:center;
+    transition:border-color .16s, background .16s;
+  }
+  .upload:hover,.upload.drag{border-color:var(--accent);background:#eef7f5}
+  .upload:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .upload .up-empty{display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none}
+  .upload .up-empty svg{width:20px;height:20px;color:#9c9c94;margin-bottom:3px}
+  .upload .up-empty b{font-weight:550;color:var(--ink-soft);font-size:13px}
+  .upload .up-empty span{font-size:11.5px;color:var(--muted);font-weight:400}
+  .upload .up-preview{display:flex;align-items:center;gap:12px;width:100%;text-align:left}
+  .upload .up-preview img{width:58px;height:58px;object-fit:cover;border-radius:9px;border:1px solid var(--line);background:#fff;flex:none}
+  .upload .up-preview .meta{flex:1;min-width:0}
+  .upload .up-preview .meta b{display:block;font-size:12.5px;font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .upload .up-preview .meta span{font-size:11.5px;color:var(--muted)}
+  .link-btn{
+    background:none;border:0;padding:4px 6px;border-radius:6px;color:var(--muted);
+    font-size:12px;cursor:pointer;transition:color .16s, background .16s;flex:none;
+  }
+  .link-btn:hover{color:var(--danger);background:rgba(180,35,24,.06)}
+
+  /* ---------- toast ---------- */
+  .toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;gap:8px;align-items:center;width:max-content;max-width:calc(100vw - 32px)}
+  .toast{
+    background:var(--ink);color:#f7f7f4;font-size:12.5px;padding:10px 16px;border-radius:999px;
+    box-shadow:0 14px 30px -14px rgba(21,23,27,.6);animation:toastIn .22s both;
+    max-width:100%;
+  }
+  @keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .toast.out{animation:toastOut .2s both}
+  @keyframes toastOut{to{opacity:0;transform:translateY(6px)}}
+
+  /* ---------- footer ---------- */
+  footer.site{border-top:1px solid var(--line);padding:20px 0 30px;background:rgba(255,255,255,.5)}
+  .foot-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
+  .foot-row .sep{width:1px;height:11px;background:var(--line-strong)}
+  .foot-row .right{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .foot-btn{background:none;border:0;padding:2px;color:var(--muted);font-size:11.5px;cursor:pointer;transition:color .16s}
+  .foot-btn:hover{color:var(--ink)}
+  .foot-legal{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:12px;
+    border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);
+  }
+  .foot-legal nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .foot-legal .sep{width:1px;height:11px;background:var(--line-strong)}
+  .foot-legal a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;transition:.16s}
+  .foot-legal a:hover{color:var(--ink);border-bottom-color:var(--line-strong)}
+  .foot-legal .mail{margin-left:auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.02em}
+
+  /* ---------- legal ---------- */
+  .legal{padding:34px 0 80px;min-height:calc(100vh - 190px)}
+  .legal-inner{max-width:760px}
+  .legal-nav{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:22px}
+  .legal-nav a{
+    display:inline-block;padding:5px 11px;border-radius:999px;font-size:12px;
+    color:var(--muted);text-decoration:none;border:1px solid transparent;transition:.16s;
+  }
+  .legal-nav a:hover{color:var(--ink);background:var(--surface-2)}
+  .legal-nav a.active{color:var(--ink);background:var(--surface);border-color:var(--line)}
+  .legal h1{margin:0 0 6px;font-size:2rem;font-weight:650;letter-spacing:-.035em}
+  .legal-updated{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 26px;
+  }
+  .legal h2{margin:30px 0 8px;font-size:1.02rem;font-weight:650;letter-spacing:-.01em}
+  .legal p,.legal li{font-size:13.5px;line-height:1.75;color:var(--ink-soft)}
+  .legal p{margin:0 0 12px}
+  .legal ul{margin:0 0 12px;padding-left:20px}
+  .legal li{margin-bottom:6px}
+  .legal a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  .legal a:hover{color:var(--ink)}
+  .legal strong{color:var(--ink);font-weight:600}
+  .legal code{
+    font-family:var(--mono);font-size:11.5px;background:var(--surface-2);
+    border:1px solid var(--line);border-radius:4px;padding:1px 4px;color:var(--ink-soft);
+  }
+  .contact-card{
+    margin-top:26px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);
+    border-radius:12px;font-size:13px;color:var(--ink-soft);line-height:1.7;
+  }
+  .contact-card b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+  .legal-back{
+    display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);
+    text-decoration:none;margin-bottom:18px;transition:color .16s;
+  }
+  .legal-back:hover{color:var(--ink)}
+
+  /* ---------- admin ---------- */
+  body.admin-mode .search{display:none}
+  .admin{padding:26px 0 80px;min-height:calc(100vh - 170px)}
+  .admin-gate{display:flex;justify-content:center;padding:42px 0 60px}
+  .gate-card{
+    width:min(430px,100%);background:var(--surface);border:1px solid var(--line);
+    border-radius:20px;padding:30px;box-shadow:var(--shadow);
+  }
+  .gate-icon{
+    width:44px;height:44px;border-radius:12px;background:var(--surface-2);
+    display:grid;place-items:center;margin-bottom:16px;color:var(--ink);
+  }
+  .gate-icon svg{width:20px;height:20px}
+  .gate-card h2{margin:0 0 6px;font-size:1.3rem;font-weight:650;letter-spacing:-.025em}
+  .gate-card > p{margin:0 0 20px;font-size:13px;color:var(--muted);line-height:1.55}
+  .gate-card .field{margin-bottom:12px}
+  .gate-card .form-error{margin-bottom:8px}
+
+  .admin-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .admin-head h1{margin:0;font-size:1.7rem;font-weight:650;letter-spacing:-.03em}
+  .admin-head p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+  .admin-head-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  .admin-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
+  .astat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 16px}
+  .astat b{display:block;font-size:1.5rem;font-weight:650;letter-spacing:-.03em;line-height:1.2}
+  .astat span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.09em}
+  .admin-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .tabs{display:flex;gap:3px;background:var(--surface-2);border:1px solid var(--line);padding:3px;border-radius:999px}
+  .tab{border:0;background:none;padding:6px 12px;border-radius:999px;font-size:12.5px;color:var(--muted);cursor:pointer;transition:.16s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(21,23,27,.08)}
+  .admin-list{display:flex;flex-direction:column;gap:10px}
+  .admin-item{
+    display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:14px;align-items:center;
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;
+  }
+  .admin-thumb{
+    width:76px;height:76px;border-radius:10px;overflow:hidden;background:var(--surface-2);
+    display:grid;place-items:center;flex:none;
+  }
+  .admin-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .admin-thumb.na{background-image:repeating-linear-gradient(45deg,transparent 0 7px,rgba(21,23,27,.03) 7px 8px)}
+  .admin-name{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.01em}
+  .admin-meta{font-size:12px;color:var(--muted);margin-top:3px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .admin-meta a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px}
+  .admin-meta .dot{color:#cfcfc7}
+  .admin-notes{
+    font-size:12px;color:var(--ink-soft);margin:6px 0 0;line-height:1.5;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .status-pill{
+    font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+    padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:var(--surface-2);
+  }
+  .status-pill.pending{color:#9a5b00;background:#fdf6e8;border-color:#efdfc2}
+  .status-pill.approved{color:#0f766e;background:#eaf5f2;border-color:#cfe6e0}
+  .status-pill.rejected{color:#b42318;background:#fdf1f0;border-color:#f0d3cf}
+  .admin-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .admin-empty{padding:52px 20px;text-align:center;border:1px dashed var(--line-strong);border-radius:16px;color:var(--muted);font-size:13px}
+
+  .bulk-panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+  .bulk-panel h3{margin:0;font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .bulk-help{margin:4px 0 12px;font-size:12px;color:var(--muted);line-height:1.6}
+  .bulk-help code{font-family:var(--mono);font-size:11px;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:1px 4px}
+  .bulk-help a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px}
+  .bulk-help a:hover{color:var(--ink)}
+  .bulk-panel textarea{
+    width:100%;min-height:126px;padding:12px;border:1px solid var(--line-strong);border-radius:10px;
+    background:var(--bg);font-family:var(--mono);font-size:12px;line-height:1.75;resize:vertical;outline:none;
+    transition:border-color .16s, box-shadow .16s;
+  }
+  .bulk-panel textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(15,118,110,.09)}
+  .bulk-row{display:flex;gap:10px;align-items:stretch;margin-top:12px;flex-wrap:wrap}
+  .bulk-row .upload{flex:1 1 240px;min-height:62px;padding:10px 12px;justify-content:flex-start;text-align:left}
+  .bulk-row .upload .up-empty{flex-direction:row;align-items:center;gap:8px}
+  .bulk-row .upload .up-empty svg{width:17px;height:17px;margin:0}
+  .bulk-row .upload .up-empty b{font-size:12.5px}
+  .bulk-row .upload .up-empty span{font-size:11px}
+  .bulk-files{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:8px;width:100%;flex-wrap:wrap}
+  .bulk-status{font-size:12px;color:var(--muted);margin-top:10px;min-height:18px}
+
+  @media (max-width:820px){
+    .detail{grid-template-columns:1fr}
+    .d-media{aspect-ratio:4/3;min-height:0;border-right:0;border-bottom:1px solid var(--line)}
+    .d-body{padding:24px}
+    .slide-arrow{width:32px;height:32px}
+    .slide-arrow.prev{left:9px}
+    .slide-arrow.next{right:9px}
+    .slide-bar{left:9px;right:9px;bottom:9px}
+  }
+  @media (max-width:640px){
+    .wrap{width:calc(100% - 28px)}
+    .brand-tag{display:none}
+    .head-row{gap:10px;padding:12px 0}
+    .search{order:3;flex:1 1 100%;max-width:none}
+    .search kbd{display:none}
+    .head-spacer{display:none}
+    .btn{padding:8px 12px;font-size:12.5px}
+    .grid{grid-template-columns:repeat(auto-fill,minmax(154px,1fr));gap:12px}
+    .card-info{padding:10px 11px 12px}
+    .name-row h3{font-size:13.5px}
+    .social{width:22px;height:22px}
+    .social svg{width:13px;height:13px}
+    .sub{font-size:11px;gap:5px;margin-top:4px}
+    .modal{padding:12px}
+    .modal-panel{max-height:94vh;border-radius:16px}
+    .d-body{padding:20px}
+    .form-wrap{padding:22px 18px}
+    .fields{grid-template-columns:1fr}
+    .form-foot .btn{flex:1}
+    .toolbar{padding-top:12px}
+    .toolbar-right{margin-left:0;width:100%}
+    .select-wrap select{width:100%}
+    .nav-menu{min-width:200px}
+    .discovery{padding:18px 0 60px}
+    .discovery-head h1{font-size:1.45rem}
+    .discovery-tools{margin-left:0;width:100%}
+    .discovery-tools .select-wrap{flex:1}
+    .foot-row .right{width:100%;margin-left:0}
+    .toast{font-size:12px;text-align:center}
+    .admin{padding:16px 0 60px}
+    .admin-gate{padding:18px 0 40px}
+    .gate-card{padding:24px}
+    .admin-head h1{font-size:1.45rem}
+    .admin-stats{gap:8px}
+    .astat{padding:11px 12px}
+    .astat b{font-size:1.25rem}
+    .admin-item{grid-template-columns:58px minmax(0,1fr);gap:11px;align-items:start}
+    .admin-thumb{width:58px;height:58px}
+    .admin-actions{grid-column:1/-1;justify-content:flex-start}
+    .bulk-row .btn{width:100%}
+    .legal{padding:22px 0 60px}
+    .legal h1{font-size:1.6rem}
+    .legal h2{margin-top:24px}
+    .foot-legal{gap:8px}
+    .foot-legal .mail{margin-left:0;width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap head-row">
+    <a class="brand" href="#" aria-label="Protodex home">
+      <span class="brand-mark" aria-hidden="true">P</span>
+      <span class="brand-name">Protodex<span>.</span></span>
+      <span class="brand-tag">Protogen Index</span>
+    </a>
+    <div class="nav-drop" id="navDrop">
+      <button class="nav-drop-btn" id="navDropBtn" type="button"
+              aria-haspopup="true" aria-expanded="false" aria-controls="navMenu">
+        Discover
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <nav class="nav-menu" id="navMenu" aria-label="Discovery menu" hidden>
+        <a href="#discovery" data-menu-link>Discovery</a>
+        <a href="#" data-menu-link>Index</a>
+        <a href="#admin" data-menu-link>Admin</a>
+        <span class="hintline" aria-hidden="true">Duplicate Protogens are merged</span>
+      </nav>
+    </div>
+    <div class="head-spacer"></div>
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="searchInput" type="search" autocomplete="off" spellcheck="false"
+             placeholder="Search name, handle or country" aria-label="Search Protogens" />
+      <kbd>/</kbd>
+    </div>
+    <button class="btn btn-primary" id="addBtn" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Add Protogen
+    </button>
+  </div>
+</header>
+
+<!-- cookie consent -->
+<div class="cookie-banner" id="cookieBanner" hidden>
+  <p>Protodex stores the Protogens you add in your browser's local storage so they stay after reload. Nothing is sent to a server. <a href="#cookies">Cookie Policy</a> · <a href="#privacy">Privacy Policy</a></p>
+  <div class="actions">
+    <button class="btn btn-primary" id="acceptCookies" type="button">Accept cookies</button>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="toolbar">
+      <span class="count"><b id="statCount">0</b> <span id="statLabel">Protogens</span></span>
+      <div class="toolbar-right">
+        <div class="select-wrap">
+          <select id="countryFilter" aria-label="Filter by country">
+            <option value="all">All countries</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+  </div>
+</main>
+
+<!-- discovery -->
+<section class="discovery" id="discoveryView" hidden>
+  <div class="wrap">
+    <div class="discovery-head">
+      <div>
+        <h1>Discovery</h1>
+        <p>Every published Protogen in one place. Duplicates are matched by Instagram handle and merged into one Protogen — extra photos become a manual slideshow.</p>
+      </div>
+      <div class="discovery-tools">
+        <span class="count"><b id="discoverCount">0</b> <span id="discoverLabel">Protogens</span></span>
+        <div class="select-wrap">
+          <select id="discoverSort" aria-label="Sort Protogens">
+            <option value="newest">Newest first</option>
+            <option value="name">Name A–Z</option>
+            <option value="country">Country</option>
+            <option value="id">Index order</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="grid" id="discoveryGrid" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="admin" id="adminView" hidden>
+  <div class="wrap">
+    <div class="admin-gate" id="adminGate">
+      <div class="gate-card">
+        <div class="gate-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.3" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <h2 id="gateTitle">Admin access</h2>
+        <p id="gateSub">Enter your password to review submissions.</p>
+        <form id="gateForm" novalidate>
+          <div class="field">
+            <label for="gatePass">Password</label>
+            <input id="gatePass" type="password" autocomplete="current-password" placeholder="••••••••" />
+          </div>
+          <div class="form-error" id="gateError"></div>
+          <button class="btn btn-primary" id="gateSubmit" type="submit" style="width:100%;margin-top:4px">Unlock</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="adminPanel" hidden>
+      <div class="admin-head">
+        <div>
+          <h1>Admin</h1>
+          <p>Approve submissions before they appear in the public index.</p>
+        </div>
+        <div class="admin-head-actions">
+          <a class="btn btn-ghost" href="#">View index</a>
+          <button class="btn btn-ghost" id="lockBtn" type="button">Lock</button>
+        </div>
+      </div>
+
+      <div class="admin-stats" id="adminStats"></div>
+
+      <div class="admin-tools">
+        <div class="tabs" id="adminTabs" role="tablist" aria-label="Protogen status"></div>
+        <button class="btn btn-ghost" id="bulkToggle" type="button" style="margin-left:auto">Bulk import</button>
+      </div>
+
+      <div class="bulk-panel" id="bulkPanel" hidden>
+        <h3>Bulk import</h3>
+        <p class="bulk-help">One Protogen per line: <code>Name | Instagram | Telegram | Country | Link | Owner</code> — country as a code or name, last fields optional. Lines starting with # are ignored. Imported Protogens are published immediately. Only import characters and photos you have permission to share (<a href="#terms">Terms</a>).</p>
+        <textarea id="bulkText" spellcheck="false" placeholder="AURORA | @aurora.oc | aurora | DE | https://www.furaffinity.net/user/aurora | Vex"></textarea>
+        <div class="bulk-row">
+          <div class="upload" id="bulkDrop" tabindex="0" role="button" aria-label="Add photos for bulk import">
+            <input id="bulkFiles" type="file" accept="image/*" multiple hidden />
+            <div class="up-empty" id="bulkEmpty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+              <b>Add photos (optional)</b>
+              <span>Filenames are matched to Protogen names</span>
+            </div>
+            <div class="bulk-files" id="bulkFileInfo" hidden></div>
+          </div>
+          <button class="btn btn-primary" id="bulkImportBtn" type="button">Import</button>
+        </div>
+        <div class="bulk-status" id="bulkStatus"></div>
+      </div>
+
+      <div class="admin-list" id="adminList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- legal -->
+<section class="legal" id="legalView" hidden>
+  <div class="wrap legal-inner">
+    <a class="legal-back" href="#">← Back to index</a>
+    <nav class="legal-nav" aria-label="Legal pages">
+      <a href="#privacy" data-nav="privacy">Privacy</a>
+      <a href="#cookies" data-nav="cookies">Cookies</a>
+      <a href="#terms" data-nav="terms">Terms</a>
+    </nav>
+
+    <article data-legal="privacy" hidden>
+      <h1>Privacy Policy</h1>
+      <p class="legal-updated">Last updated: October 29, 2026</p>
+      <p>Protodex is a fan-made index of Protogen characters and their owners. This policy explains what information the site handles and where it goes. In short: Protodex runs entirely in your browser and does not send your data to us.</p>
+
+      <h2>1. Who we are</h2>
+      <p>Protodex (“Protodex”, “we”, “us”) is the operator of this website. For any question or request about this policy, contact us at <a href="mailto:patch@protodex.dev">patch@protodex.dev</a>.</p>
+
+      <h2>2. What we collect</h2>
+      <p><strong>Information you enter.</strong> When you add or import a Protogen, the details you provide — character name, owner, Instagram and Telegram handles, country, profile link, notes and any photo — are saved in your browser’s local storage on your device. We do not receive, transmit or store this information on a server.</p>
+      <p><strong>Photos.</strong> Uploaded images are resized and compressed in your browser, then kept with your saved Protogens. Images added by URL are loaded directly from the third-party site that hosts them.</p>
+      <p><strong>Admin password.</strong> The admin password is stored in this page only as a salted, hashed value. The password itself is never saved.</p>
+      <p><strong>Technical data.</strong> The page uses no analytics, advertising, tracking pixels or fingerprinting. If you open Protodex through a hosting provider or web server, that provider may automatically log technical data such as your IP address, browser type and the time of your request under its own policies. We do not control or use those logs.</p>
+
+      <h2>3. Cookies and local storage</h2>
+      <p>Protodex does not set cookies. It uses local storage and session storage on your device for the features described in the <a href="#cookies">Cookie Policy</a>.</p>
+
+      <h2>4. Why we handle this information</h2>
+      <p>Because this data stays on your device, we do not process it for our own purposes. Where data protection law (such as the GDPR or UK GDPR) applies, our handling is limited to:</p>
+      <ul>
+        <li>storing the content you choose to add so the index works as you expect;</li>
+        <li>protecting the admin view with a password; and</li>
+        <li>replying to you if you contact us by email.</li>
+      </ul>
+
+      <h2>5. Sharing</h2>
+      <p>We do not sell, rent or share personal information. If you follow a link to Instagram, Telegram, Fur Affinity or another service, that service may collect information about you under its own privacy policy. Any photo or profile link you add from another service is loaded from that service, which will see your IP address when it is requested.</p>
+
+      <h2>6. Retention and deletion</h2>
+      <p>Saved Protogens remain in your browser until you remove them in the admin view or clear site data in your browser settings. Because we never receive this data, we cannot delete it for you — clearing it on your device removes it completely. Emails you send us are kept only as long as needed to answer you.</p>
+
+      <h2>7. Your rights</h2>
+      <p>Depending on where you live, you may have rights to access, correct, export or delete personal data, or to object to its processing. Since the index data lives only on your device, you can exercise most of these directly: export it with “Export JSON”, or delete it using your browser’s clear-site-data option. For anything else, email <a href="mailto:patch@protodex.dev">patch@protodex.dev</a>.</p>
+
+      <h2>8. Security</h2>
+      <p>Protodex is a static page with no server of its own. Data in local storage is not encrypted and can be read by anyone with access to your browser profile or device. The admin password is a deterrent to casual visitors, not a guarantee of security. Please do not enter sensitive personal information in the details you add.</p>
+
+      <h2>9. Children</h2>
+      <p>Protodex is not directed at children under 13, and we do not knowingly collect information from them. If you are under the age of majority where you live, please use the site with the involvement of a parent or guardian.</p>
+
+      <h2>10. Changes</h2>
+      <p>We may update this policy as the site changes. The date at the top shows the latest version, and material changes will be noted on this page.</p>
+
+      <div class="contact-card">
+        <b>Contact</b>
+        Privacy questions and data requests: <a href="mailto:patch@protodex.dev">patch@protodex.dev</a>
+      </div>
+    </article>
+
+    <article data-legal="cookies" hidden>
+      <h1>Cookie Policy</h1>
+      <p class="legal-updated">Last updated: October 29, 2026</p>
+      <p>This policy explains how Protodex uses cookies and similar browser storage. The short version: no cookies and no tracking — only the local storage the index needs to work.</p>
+
+      <h2>1. Cookies</h2>
+      <p>Protodex does not set, read or use cookies. There are no analytics cookies, advertising cookies, social media cookies or preference cookies.</p>
+
+      <h2>2. Local storage we use</h2>
+      <p>The site uses two browser storage mechanisms that are technically similar to cookies but are never sent to a server:</p>
+      <ul>
+        <li><strong>localStorage — <code>protodex.protogens.v1</code>.</strong> Stores the Protogens you add, including any photos, so the index survives a reload. It stays until you delete it.</li>
+        <li><strong>sessionStorage — <code>protodex.admin.session</code>.</strong> Remembers that you unlocked the admin view in this tab. It is cleared when you close the tab or press “Lock”.</li>
+      </ul>
+      <p>Both are strictly necessary for the site to work as described. They contain no identifiers produced by us and are not shared with anyone.</p>
+
+      <h2>3. Third-party content</h2>
+      <p>Protodex does not embed third-party cookies or tracking scripts. If a Protogen links to, or loads an image from, another service (for example Instagram, Telegram or Fur Affinity), your browser contacts that service directly and its cookie and privacy policies apply. We have no control over those cookies.</p>
+
+      <h2>4. Hosting</h2>
+      <p>If you access Protodex through a hosting provider, that provider may set its own cookies or log technical information for security and delivery. Those cookies are controlled by the provider, not by Protodex; check the provider’s cookie policy.</p>
+
+      <h2>5. Managing storage</h2>
+      <p>You can clear Protodex’s local data by deleting site data for this page in your browser settings. Blocking local storage will stop new Protogens from being saved. Browser help pages explain how to view and delete cookies and site data.</p>
+
+      <div class="contact-card">
+        <b>Contact</b>
+        Questions about cookies or storage: <a href="mailto:patch@protodex.dev">patch@protodex.dev</a>
+      </div>
+    </article>
+
+    <article data-legal="terms" hidden>
+      <h1>Terms of Service</h1>
+      <p class="legal-updated">Last updated: October 29, 2026</p>
+      <p>These terms govern your use of Protodex. By using the site, you agree to them. If you do not agree, please do not use the site.</p>
+
+      <h2>1. The service</h2>
+      <p>Protodex is a free, fan-made index for Protogen characters, owners and the links they choose to share. It is not affiliated with, endorsed by or sponsored by Protogen creators, Instagram, Telegram, Fur Affinity or any other linked platform. The site is provided for personal, non-commercial use and may change or disappear at any time.</p>
+
+      <h2>2. Eligibility</h2>
+      <p>You must be at least 13 years old to use Protodex. If you are under the age of majority where you live, you may use it only with the involvement of a parent or guardian.</p>
+
+      <h2>3. Protogens and content</h2>
+      <p>You are responsible for everything you add. In particular:</p>
+      <ul>
+        <li>You must own the character and art you submit, or have the creator’s permission to publish the photo and profile information.</li>
+        <li>By submitting content, you confirm you have that permission and grant Protodex a non-exclusive, worldwide, royalty-free licence to display, resize and store that content as part of the index.</li>
+        <li>You keep ownership of your characters, art and handles. We do not claim ownership of your content.</li>
+        <li>Protogens may be reviewed, approved, rejected, edited or removed at any time, for any reason, without notice.</li>
+        <li>Do not submit other people’s private information — such as home addresses, phone numbers or legal names — without their consent.</li>
+      </ul>
+
+      <h2>4. Acceptable use</h2>
+      <p>You agree not to:</p>
+      <ul>
+        <li>break the law or infringe anyone’s rights;</li>
+        <li>submit content that is illegal, hateful, harassing, defamatory, or that sexualises minors;</li>
+        <li>impersonate another person or character owner;</li>
+        <li>attempt to bypass the admin password, probe the site for vulnerabilities, or interfere with its operation;</li>
+        <li>scrape, mirror or mass-copy the index or its content without permission; or</li>
+        <li>use the site to distribute malware or spam.</li>
+      </ul>
+
+      <h2>5. Copyright and takedowns</h2>
+      <p>If you believe content on Protodex infringes your copyright, email <a href="mailto:patch@protodex.dev">patch@protodex.dev</a> with (a) the material and where it appears, (b) proof that you own or represent the rights, and (c) your contact details. We will review the report and remove or restrict access to material that appears to infringe. Content from repeat infringers may be removed entirely.</p>
+
+      <h2>6. Third-party links</h2>
+      <p>Protodex links to external sites and services. We do not control them and are not responsible for their content, availability or practices. Following those links is at your own risk and subject to their terms.</p>
+
+      <h2>7. No warranty</h2>
+      <p>The site is provided “as is” and “as available”, without warranties of any kind, express or implied, including fitness for a particular purpose, accuracy or non-infringement. Protogens are stored in your browser and may be lost if you clear your data, browse privately, change devices or reach storage limits. Keep your own backup using “Export JSON”.</p>
+
+      <h2>8. Limitation of liability</h2>
+      <p>To the fullest extent permitted by law, Protodex and its operator are not liable for indirect, incidental, special or consequential damages, or for loss of data, arising from your use of or inability to use the site. Nothing in these terms limits liability that cannot be limited by law.</p>
+
+      <h2>9. Changes</h2>
+      <p>We may update these terms from time to time. The date at the top of this page shows the current version. Continuing to use Protodex after changes means you accept them.</p>
+
+      <h2>10. Governing law</h2>
+      <p>These terms are governed by the laws applicable to the operator of Protodex, without regard to conflict-of-law rules. Disputes will be handled by the courts competent for the operator’s place of residence, unless mandatory consumer law gives you the right to another forum.</p>
+
+      <h2>11. Contact</h2>
+      <p>Questions about these terms: <a href="mailto:patch@protodex.dev">patch@protodex.dev</a>.</p>
+
+      <div class="contact-card">
+        <b>Contact</b>
+        Protodex — <a href="mailto:patch@protodex.dev">patch@protodex.dev</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot-row">
+    <span>Protodex — a Protogen character index</span>
+    <span class="sep"></span>
+    <span id="storageState">Saved locally</span>
+    <div class="right">
+      <a class="foot-btn" href="#admin">Admin</a>
+      <span class="sep"></span>
+      <button class="foot-btn" id="exportBtn" type="button">Export JSON</button>
+    </div>
+  </div>
+  <div class="wrap foot-legal">
+    <span>© <span id="year">2026</span> Protodex</span>
+    <span class="sep"></span>
+    <nav aria-label="Legal">
+      <a href="#privacy">Privacy</a>
+      <a href="#cookies">Cookies</a>
+      <a href="#terms">Terms</a>
+    </nav>
+    <a class="mail" href="mailto:patch@protodex.dev">patch@protodex.dev</a>
+  </div>
+</footer>
+
+<!-- terms & privacy (first visit) -->
+<div class="modal" id="termsModal" aria-hidden="true">
+  <div class="modal-backdrop"></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="termsTitle" style="max-width:560px">
+    <h2 id="termsTitle">Welcome to Protodex</h2>
+    <p>Before you start, please review the <a href="#terms">Terms of Service</a> and <a href="#privacy">Privacy Policy</a>.</p>
+    <p>Protodex stores the characters and photos you add in your browser's local storage on your device. Nothing is sent to a server, and the site sets no cookies or tracking.</p>
+    <div class="field" style="margin:16px 0 0">
+      <label class="checkbox">
+        <input type="checkbox" id="termsAgree" />
+        <span>I have read and agree to the Terms of Service and Privacy Policy.</span>
+      </label>
+    </div>
+    <button class="btn btn-primary" id="termsAccept" type="button" disabled>Accept & Continue</button>
+  </div>
+</div>
+
+<!-- detail -->
+<div class="modal" id="detailModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close="detail"></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <button class="modal-close" type="button" data-close="detail" aria-label="Close details">✕</button>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<!-- add -->
+<div class="modal" id="addModal" aria-hidden="true">
+  <div class="modal-backdrop" data-close="add"></div>
+  <div class="modal-panel narrow" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <button class="modal-close" type="button" data-close="add" aria-label="Close form">✕</button>
+    <div class="form-wrap">
+      <div class="form-head">
+        <h2 id="addTitle">Add a Protogen</h2>
+        <p>Only the name is required. Links can be handles or full URLs.</p>
+      </div>
+      <form id="addForm" novalidate>
+        <div class="fields">
+          <div class="field">
+            <label for="fName">Name <span class="req">*</span></label>
+            <input id="fName" name="name" maxlength="40" placeholder="e.g. NEO-VYRA" required />
+            <div class="form-error" id="nameError">Please enter a name.</div>
+          </div>
+          <div class="field">
+            <label for="fOwner">Owner</label>
+            <input id="fOwner" name="owner" maxlength="40" placeholder="e.g. Vex" />
+          </div>
+          <div class="field">
+            <label for="fInstagram">Instagram</label>
+            <input id="fInstagram" name="instagram" maxlength="80" placeholder="@handle" />
+          </div>
+          <div class="field">
+            <label for="fTelegram">Telegram</label>
+            <input id="fTelegram" name="telegram" maxlength="80" placeholder="@handle" />
+          </div>
+          <div class="field">
+            <label for="fCountry">Country</label>
+            <select id="fCountry" name="country"></select>
+          </div>
+          <div class="field">
+            <label for="fSource">Link</label>
+            <input id="fSource" name="source" type="url" placeholder="Fur Affinity, Toyhouse…" />
+          </div>
+          <div class="field full">
+            <label for="fFile">Photo</label>
+            <div class="upload" id="uploadZone" tabindex="0" role="button" aria-label="Upload a photo">
+              <input id="fFile" type="file" accept="image/*" hidden />
+              <div class="up-empty" id="upEmpty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+                <b>Click to upload or drop an image</b>
+                <span>JPG, PNG or WEBP — resized automatically</span>
+              </div>
+              <div class="up-preview" id="upPreview" hidden>
+                <img id="upThumb" alt="" />
+                <div class="meta">
+                  <b id="upName">photo</b>
+                  <span id="upSize"></span>
+                </div>
+                <button class="link-btn" type="button" id="upRemove">Remove</button>
+              </div>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="fImage">Or image URL</label>
+            <input id="fImage" name="image" type="url" placeholder="https://…" />
+            <span class="hint">Used only when no file is uploaded. Empty means N/A.</span>
+          </div>
+          <div class="field full">
+            <label for="fNotes">Notes</label>
+            <textarea id="fNotes" name="notes" maxlength="400" placeholder="Short description, links, anything worth noting."></textarea>
+          </div>
+        </div>
+        <p class="form-legal">By submitting, you confirm you have permission to share any photo you upload, and you agree to the <a href="#terms">Terms</a> and <a href="#privacy">Privacy Policy</a>.</p>
+        <div class="form-foot">
+          <button class="btn btn-ghost" type="button" data-close="add">Cancel</button>
+          <button class="btn btn-primary" type="submit">Add Protogen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  const STORE_KEY = "protodex.protogens.v1";
+  const LEGACY_STORE_KEYS = ["protodex.entries.v3"];
+  const COOKIE_CONSENT = "protodex.cookies.accepted";
+  const TERMS_ACCEPTED = "protodex.terms.accepted";
+
+  function setConsent(name, value){
+    try { localStorage.setItem(name, String(value)); } catch (err){ /* storage disabled */ }
+  }
+  function getConsent(name){
+    try { return localStorage.getItem(name); } catch (err){ return null; }
+  }
+  function cookiesAccepted(){ return getConsent(COOKIE_CONSENT) === "1"; }
+  function termsAccepted(){ return getConsent(TERMS_ACCEPTED) === "1"; }
+  function acceptCookies(){ setConsent(COOKIE_CONSENT, "1"); }
+  function acceptTerms(){ setConsent(TERMS_ACCEPTED, "1"); }
+  const $ = (sel, root) => (root || document).querySelector(sel);
+  const pad = n => String(n).padStart(4, "0");
+  const esc = v => String(v == null ? "" : v)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+
+  const COUNTRIES = [
+    ["US","United States"],["CA","Canada"],["MX","Mexico"],["BR","Brazil"],["AR","Argentina"],
+    ["CL","Chile"],["CO","Colombia"],["PE","Peru"],["GB","United Kingdom"],["IE","Ireland"],
+    ["FR","France"],["DE","Germany"],["NL","Netherlands"],["BE","Belgium"],["ES","Spain"],
+    ["PT","Portugal"],["IT","Italy"],["CH","Switzerland"],["AT","Austria"],["SE","Sweden"],
+    ["NO","Norway"],["DK","Denmark"],["FI","Finland"],["IS","Iceland"],["PL","Poland"],
+    ["CZ","Czechia"],["SK","Slovakia"],["HU","Hungary"],["RO","Romania"],["BG","Bulgaria"],
+    ["GR","Greece"],["UA","Ukraine"],["RU","Russia"],["TR","Türkiye"],["IL","Israel"],
+    ["SA","Saudi Arabia"],["AE","United Arab Emirates"],["EG","Egypt"],["ZA","South Africa"],["NG","Nigeria"],
+    ["KE","Kenya"],["MA","Morocco"],["IN","India"],["PK","Pakistan"],["BD","Bangladesh"],
+    ["CN","China"],["JP","Japan"],["KR","South Korea"],["TW","Taiwan"],["HK","Hong Kong"],
+    ["SG","Singapore"],["MY","Malaysia"],["ID","Indonesia"],["PH","Philippines"],["TH","Thailand"],
+    ["VN","Vietnam"],["AU","Australia"],["NZ","New Zealand"],["XX","Other"]
+  ];
+  const countryName = code => (COUNTRIES.find(c => c[0] === code) || ["XX","Other"])[1];
+
+  /* ---------- state ---------- */
+  let entries = [];
+  let query = "";
+  let countryFilter = "all";
+  let discoverSort = "newest";
+  let lastFocused = null;
+
+  function safeUrl(u){
+    if (!u) return "";
+    const s = String(u).trim();
+    return /^(https?:\/\/|\/|data:image\/)/i.test(s) ? s : "";
+  }
+  function cleanHandle(v){
+    let s = String(v || "").trim();
+    if (!s) return "";
+    s = s.replace(/^https?:\/\/(www\.)?(instagram\.com|t\.me|telegram\.me)\//i, "");
+    s = s.replace(/^@/, "").replace(/\/+$/, "");
+    return s.slice(0, 60);
+  }
+  function normalizeLink(v){
+    let s = String(v || "").trim();
+    if (!s) return "";
+    if (/^[a-z][a-z0-9+.-]*:/i.test(s)) return s;
+    if (/^\/\//.test(s)) return "https:" + s;
+    return "https://" + s;
+  }
+  const igUrl = h => /^https?:\/\//i.test(h) ? h : "https://instagram.com/" + cleanHandle(h);
+  const tgUrl = h => /^https?:\/\//i.test(h) ? h : "https://t.me/" + cleanHandle(h);
+  const handleLabel = h => {
+    const c = cleanHandle(h);
+    return c ? "@" + c : "";
+  };
+
+  function sanitizeEntry(e){
+    const id = Number(e.id) || 0;
+    const code = /^[A-Z]{2}$/.test(e.country || "") ? e.country : "XX";
+    const images = [];
+    const rawImages = (Array.isArray(e.images) ? e.images : []).concat(e.image ? [e.image] : []);
+    rawImages.forEach(raw => {
+      const url = safeUrl(normalizeLink(raw));
+      if (url && !images.includes(url)) images.push(url);
+    });
+    return {
+      id,
+      name: String(e.name || "Unnamed").slice(0, 40),
+      owner: String(e.owner || "").slice(0, 40),
+      instagram: cleanHandle(e.instagram),
+      telegram: cleanHandle(e.telegram),
+      country: countryName(code) === "Other" ? "XX" : code,
+      source: safeUrl(normalizeLink(e.source)),
+      image: images[0] || "",
+      images: images.slice(0, 12),
+      notes: String(e.notes || "").slice(0, 400),
+      status: ["pending", "approved", "rejected"].includes(e.status) ? e.status : "approved",
+      createdAt: Number(e.createdAt) || 0
+    };
+  }
+
+  function load(){
+    let legacyKey = "";
+    try {
+      let raw = localStorage.getItem(STORE_KEY);
+      if (!raw){
+        for (const key of LEGACY_STORE_KEYS){
+          const legacy = localStorage.getItem(key);
+          if (legacy){ raw = legacy; legacyKey = key; break; }
+        }
+      }
+      if (raw){
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)){
+          entries = parsed.filter(e => e && e.name).map(sanitizeEntry);
+          const merged = mergeDuplicates();
+          if ((legacyKey || merged) && save() && legacyKey){
+            try { localStorage.removeItem(legacyKey); } catch (err){ /* noop */ }
+          }
+          return;
+        }
+      }
+    } catch (err){ console.warn("Protodex: read failed", err); }
+    entries = [];
+    save();
+  }
+
+  function save(){
+    if (!cookiesAccepted()){
+      $("#storageState").textContent = "Accept cookies to save data";
+      return false;
+    }
+    try {
+      const raw = JSON.stringify(entries);
+      localStorage.setItem(STORE_KEY, raw);
+      const kb = Math.round(raw.length / 1024);
+      $("#storageState").textContent = "Saved locally · " + (kb >= 1024 ? (kb / 1024).toFixed(1) + " MB" : Math.max(kb, 1) + " KB");
+      return true;
+    } catch (err){
+      console.warn("Protodex: write failed", err);
+      $("#storageState").textContent = "Storage full";
+      return false;
+    }
+  }
+
+  const nextId = () => entries.reduce((m, e) => m > e.id ? m : e.id, 0) + 1;
+
+  /* ---------- image upload ---------- */
+  const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
+  let pendingImage = "";
+
+  function readImageFile(file){
+    return new Promise((resolve, reject) => {
+      if (!file || !/^image\//i.test(file.type)) return reject(new Error("That file is not an image."));
+      if (file.size > MAX_UPLOAD_BYTES) return reject(new Error("Image is too large (max 20 MB)."));
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error("That image could not be read."));
+        img.src = reader.result;
+      };
+      reader.onerror = () => reject(new Error("That file could not be read."));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function compressImage(file){
+    const img = await readImageFile(file);
+    const limit = 900;
+    const scale = Math.min(1, limit / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.max(1, Math.round(img.naturalWidth * scale));
+    const h = Math.max(1, Math.round(img.naturalHeight * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(img, 0, 0, w, h);
+    let out = canvas.toDataURL("image/webp", 0.82);
+    if (!out.startsWith("data:image/webp")) out = canvas.toDataURL("image/png");
+    return out;
+  }
+
+  const prettyBytes = n => n >= 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB";
+
+  function setPending(dataUrl, name, sizeLabel){
+    pendingImage = dataUrl || "";
+    $("#upEmpty").hidden = !!dataUrl;
+    $("#upPreview").hidden = !dataUrl;
+    if (dataUrl){
+      $("#upThumb").src = dataUrl;
+      $("#upName").textContent = name || "photo";
+      $("#upSize").textContent = sizeLabel || "";
+    } else {
+      $("#upThumb").removeAttribute("src");
+      $("#upName").textContent = "";
+      $("#upSize").textContent = "";
+    }
+  }
+
+  /* ---------- icons ---------- */
+  const IG_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>`;
+  const TG_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m21 4-3 16-6-4.5L9 19l-.5-5L21 4Z"/><path d="M8.5 14 3.5 12 21 4"/></svg>`;
+  const LINK_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M19 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/></svg>`;
+  const domainOf = u => {
+    try { return new URL(u).hostname.replace(/^www\./, ""); }
+    catch (err){ return "link"; }
+  };
+
+  /* ---------- render ---------- */
+  function visibleEntries(){
+    const q = query.trim().toLowerCase();
+    return entries.filter(e => {
+      if (e.status !== "approved") return false;
+      if (countryFilter !== "all" && e.country !== countryFilter) return false;
+      if (!q) return true;
+      return [e.name, e.owner, e.instagram, e.telegram, countryName(e.country), e.source, e.notes]
+        .join(" ").toLowerCase().includes(q);
+    }).sort((a, b) => a.id - b.id);
+  }
+
+  function socialLinks(e, compact){
+    const out = [];
+    if (e.instagram) out.push(`<a class="social" href="${esc(igUrl(e.instagram))}" target="_blank" rel="noopener noreferrer" title="Instagram: ${esc(handleLabel(e.instagram))}" aria-label="Instagram ${esc(handleLabel(e.instagram))}">${IG_ICON}</a>`);
+    if (e.telegram) out.push(`<a class="social" href="${esc(tgUrl(e.telegram))}" target="_blank" rel="noopener noreferrer" title="Telegram: ${esc(handleLabel(e.telegram))}" aria-label="Telegram ${esc(handleLabel(e.telegram))}">${TG_ICON}</a>`);
+    return out.length ? `<div class="socials">${out.join("")}</div>` : "";
+  }
+
+  function entryImages(e){
+    if (!e) return [];
+    if (Array.isArray(e.images) && e.images.length) return e.images.slice();
+    return e.image ? [e.image] : [];
+  }
+
+  function mediaBlock(e){
+    const images = entryImages(e);
+    if (images.length){
+      const count = images.length > 1 ? `<span class="media-count">${images.length} photos</span>` : "";
+      return `<div class="media"><img src="${esc(images[0])}" alt="${esc(e.name)}" loading="lazy" data-fallback="1" />${count}</div>`;
+    }
+    return `<div class="media na"><span class="na-label">N/A</span></div>`;
+  }
+
+  function cardHTML(e, i){
+    return `
+      <article class="card" style="animation-delay:${Math.min((i || 0) * 22, 220)}ms">
+        <button class="card-hit" type="button" data-open="${e.id}" aria-label="Open ${esc(e.name)}"></button>
+        ${mediaBlock(e)}
+        <div class="card-info">
+          <div class="name-row">
+            <h3>${esc(e.name)}</h3>
+            ${socialLinks(e, true)}
+          </div>
+          <div class="sub">
+            <span class="id">#${pad(e.id)}</span>
+            <span class="dot">·</span>
+            <span class="cc">${esc(e.country)}</span>
+            <span>${esc(countryName(e.country))}</span>
+            ${e.owner ? `<span class="dot">·</span><span class="owner">${esc(e.owner)}</span>` : ""}
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function bindCards(grid){
+    grid.querySelectorAll("img[data-fallback]").forEach(img => {
+      img.addEventListener("error", () => {
+        const box = img.parentElement;
+        box.classList.add("na");
+        box.innerHTML = '<span class="na-label">N/A</span>';
+      }, { once: true });
+    });
+
+    grid.querySelectorAll("[data-open]").forEach(btn => {
+      btn.addEventListener("click", () => openDetail(Number(btn.dataset.open)));
+    });
+  }
+
+  function mainEmptyHTML(){
+    const approved = entries.filter(e => e.status === "approved").length;
+    const pending = entries.filter(e => e.status === "pending").length;
+    if (!approved && pending){
+      return `<div class="empty"><b>Nothing published yet</b>${pending} submission${pending === 1 ? "" : "s"} waiting for admin approval.
+        <div style="margin-top:16px"><a class="btn btn-ghost" href="#admin">Open admin</a></div></div>`;
+    }
+    if (!approved){
+      return `<div class="empty"><b>No Protogens yet</b>Add the first real Protogen to start your index.
+        <div style="margin-top:16px"><button class="btn btn-primary" id="emptyAdd" type="button">Add Protogen</button></div></div>`;
+    }
+    return `<div class="empty"><b>No Protogens found</b>Try a different search or country filter.</div>`;
+  }
+
+  function render(){
+    const list = visibleEntries();
+    const grid = $("#grid");
+
+    grid.innerHTML = list.length ? list.map(cardHTML).join("") : mainEmptyHTML();
+    bindCards(grid);
+
+    const emptyAdd = $("#emptyAdd");
+    if (emptyAdd) emptyAdd.addEventListener("click", openAdd);
+
+    const approvedCount = entries.filter(e => e.status === "approved").length;
+    $("#statCount").textContent = String(approvedCount);
+    $("#statLabel").textContent = approvedCount === 1 ? "Protogen" : "Protogens";
+    buildCountryFilter();
+    renderDiscovery();
+  }
+
+  function discoveryList(){
+    const list = entries.filter(e => e.status === "approved").slice();
+    if (discoverSort === "name"){
+      return list.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+    }
+    if (discoverSort === "country"){
+      return list.sort((a, b) => countryName(a.country).localeCompare(countryName(b.country)) ||
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+    }
+    if (discoverSort === "id") return list.sort((a, b) => a.id - b.id);
+    return list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0) || b.id - a.id);
+  }
+
+  function renderDiscovery(){
+    const grid = $("#discoveryGrid");
+    if (!grid) return;
+    const list = discoveryList();
+
+    if (list.length){
+      grid.innerHTML = list.map(cardHTML).join("");
+    } else {
+      const pending = entries.filter(e => e.status === "pending").length;
+      grid.innerHTML = pending
+        ? `<div class="empty"><b>Nothing published yet</b>${pending} submission${pending === 1 ? "" : "s"} waiting for admin approval.
+             <div style="margin-top:16px"><a class="btn btn-ghost" href="#admin">Open admin</a></div></div>`
+        : `<div class="empty"><b>No Protogens yet</b>Add the first real Protogen to start your index.
+             <div style="margin-top:16px"><button class="btn btn-primary" id="discoverAdd" type="button">Add Protogen</button></div></div>`;
+    }
+    bindCards(grid);
+
+    const add = $("#discoverAdd");
+    if (add) add.addEventListener("click", openAdd);
+
+    $("#discoverCount").textContent = String(list.length);
+    $("#discoverLabel").textContent = list.length === 1 ? "Protogen" : "Protogens";
+  }
+
+  function buildCountryFilter(){
+    const sel = $("#countryFilter");
+    const used = [...new Set(entries.filter(e => e.status === "approved").map(e => e.country))]
+      .sort((a, b) => countryName(a).localeCompare(countryName(b)));
+    sel.innerHTML = `<option value="all">All countries</option>` +
+      used.map(c => `<option value="${esc(c)}">${esc(countryName(c))}</option>`).join("");
+    if (countryFilter !== "all" && !used.includes(countryFilter)) countryFilter = "all";
+    sel.value = countryFilter;
+  }
+
+  /* ---------- detail ---------- */
+  function detailMediaHTML(e){
+    const images = entryImages(e);
+    if (!images.length) return `<div class="d-media na"><span class="na-label">N/A</span></div>`;
+    if (images.length === 1){
+      return `<div class="d-media"><img src="${esc(images[0])}" alt="${esc(e.name)}" data-fallback="1" /></div>`;
+    }
+    return `<div class="d-media slideshow">
+      <img src="${esc(images[0])}" alt="${esc(e.name)} — photo 1" data-slide-img data-fallback="1" />
+      <button class="slide-arrow prev" type="button" data-slide="-1" aria-label="Previous photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button class="slide-arrow next" type="button" data-slide="1" aria-label="Next photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <div class="slide-bar">
+        <span class="slide-count"><b data-slide-current>1</b> / ${images.length}</span>
+        <div class="slide-dots" role="tablist" aria-label="Photos">
+          ${images.map((_, i) => `<button class="slide-dot${i === 0 ? " active" : ""}" type="button" role="tab"
+            data-slide-to="${i}" aria-label="Photo ${i + 1}" aria-selected="${i === 0 ? "true" : "false"}"></button>`).join("")}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function openDetail(id){
+    const e = entries.find(x => x.id === id);
+    if (!e) return;
+    const images = entryImages(e);
+    lastFocused = document.activeElement;
+
+    const links = [];
+    if (e.instagram) links.push(`<a class="slink" href="${esc(igUrl(e.instagram))}" target="_blank" rel="noopener noreferrer">
+        ${IG_ICON}<span class="lbl">Instagram</span><span class="handle">${esc(handleLabel(e.instagram))}</span></a>`);
+    if (e.telegram) links.push(`<a class="slink" href="${esc(tgUrl(e.telegram))}" target="_blank" rel="noopener noreferrer">
+        ${TG_ICON}<span class="lbl">Telegram</span><span class="handle">${esc(handleLabel(e.telegram))}</span></a>`);
+    if (e.source) links.push(`<a class="slink" href="${esc(e.source)}" target="_blank" rel="noopener noreferrer">
+        ${LINK_ICON}<span class="lbl">Profile</span><span class="handle">${esc(domainOf(e.source))}</span></a>`);
+
+    const media = detailMediaHTML(e);
+
+    $("#detailBody").innerHTML = `
+      <div class="detail">
+        ${media}
+        <div class="d-body">
+          <div class="d-id">PROTOGEN #${pad(e.id)}</div>
+          <h2 id="detailTitle">${esc(e.name)}</h2>
+          <div class="d-sub">
+            <span class="cc">${esc(e.country)}</span>
+            <span>${esc(countryName(e.country))}</span>
+            ${e.owner ? `<span class="dot">·</span><span class="owner">Owner ${esc(e.owner)}</span>` : ""}
+          </div>
+
+          ${links.length ? `<div class="d-links">${links.join("")}</div>` : `<div class="no-links">No links added yet.</div>`}
+
+          <div class="d-section">
+            <h4>Notes</h4>
+            <p>${esc(e.notes || "No notes yet.")}</p>
+          </div>
+
+          <div class="d-actions">
+            <button class="btn btn-ghost small" type="button" id="replacePhoto">${images.length > 1 ? "Change current photo" : "Change photo"}</button>
+            <input id="photoInput" type="file" accept="image/*" hidden />
+            <button class="btn btn-danger small" type="button" id="deleteEntry">Remove Protogen</button>
+          </div>
+        </div>
+      </div>`;
+
+    const modal = $("#detailModal");
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    const img = $("#detailBody img[data-fallback]");
+    if (img) img.addEventListener("error", () => {
+      const box = img.parentElement;
+      box.classList.add("na");
+      box.innerHTML = '<span class="na-label">N/A</span>';
+    }, { once: true });
+
+    let activeSlide = 0;
+    const slideImg = $("#detailBody [data-slide-img]");
+    const slideDots = Array.from(document.querySelectorAll("#detailBody [data-slide-to]"));
+    const slideCounter = $("#detailBody [data-slide-current]");
+
+    function showSlide(next){
+      if (!slideImg || images.length < 2) return;
+      activeSlide = (next + images.length) % images.length;
+      slideImg.src = images[activeSlide];
+      slideImg.alt = `${e.name} — photo ${activeSlide + 1}`;
+      if (slideCounter) slideCounter.textContent = String(activeSlide + 1);
+      slideDots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === activeSlide);
+        dot.setAttribute("aria-selected", i === activeSlide ? "true" : "false");
+      });
+    }
+
+    document.querySelectorAll("#detailBody [data-slide]").forEach(btn => {
+      btn.addEventListener("click", () => showSlide(activeSlide + Number(btn.dataset.slide)));
+    });
+    slideDots.forEach((dot, i) => {
+      dot.addEventListener("click", () => showSlide(i));
+    });
+
+    $("#deleteEntry").addEventListener("click", () => {
+      if (confirm(`Remove "${e.name}" from Protodex?`)){
+        entries = entries.filter(x => x.id !== e.id);
+        save(); render(); closeModal("detail");
+        toast(`Removed ${e.name}`);
+      }
+    });
+
+    $("#replacePhoto").addEventListener("click", () => $("#photoInput").click());
+    $("#photoInput").addEventListener("change", async ev => {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      const previousImages = images.slice();
+      try {
+        const compressed = await compressImage(file);
+        const nextImages = images.slice();
+        if (nextImages.length) nextImages[Math.min(activeSlide, nextImages.length - 1)] = compressed;
+        else nextImages.push(compressed);
+        e.images = nextImages.slice(0, 12);
+        e.image = e.images[0] || "";
+        if (!save()){
+          e.images = previousImages;
+          e.image = previousImages[0] || "";
+          toast("Storage is full — try a smaller photo.");
+          return;
+        }
+        render();
+        openDetail(e.id);
+        toast("Photo updated");
+      } catch (err){
+        toast(err.message || "Upload failed.");
+      }
+    });
+
+    $("#detailModal .modal-close").focus();
+  }
+
+  function closeModal(which){
+    if (which === "add"){
+      $("#addModal").classList.remove("open");
+      $("#addModal").setAttribute("aria-hidden", "true");
+    } else {
+      $("#detailModal").classList.remove("open");
+      $("#detailModal").setAttribute("aria-hidden", "true");
+    }
+    if (!$("#detailModal").classList.contains("open") && !$("#addModal").classList.contains("open")){
+      document.body.style.overflow = "";
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+  }
+
+  /* ---------- add form ---------- */
+  function fillCountrySelect(){
+    $("#fCountry").innerHTML = `<option value="XX">Not specified</option>` +
+      COUNTRIES.filter(c => c[0] !== "XX")
+        .map(c => `<option value="${c[0]}">${c[1]}</option>`).join("");
+  }
+
+  function openAdd(){
+    lastFocused = document.activeElement;
+    $("#addForm").reset();
+    $("#fCountry").value = "XX";
+    $("#nameError").classList.remove("show");
+    $("#fFile").value = "";
+    setPending("");
+    $("#addModal").classList.add("open");
+    $("#addModal").setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    setTimeout(() => $("#fName").focus(), 40);
+  }
+
+  /* ---------- upload wiring ---------- */
+  const uploadZone = $("#uploadZone");
+  const fileInput = $("#fFile");
+
+  async function handleUpload(file){
+    const empty = $("#upEmpty");
+    const original = empty.innerHTML;
+    empty.hidden = false;
+    empty.innerHTML = '<b>Processing image…</b><span>resizing for storage</span>';
+    $("#upPreview").hidden = true;
+    try {
+      const data = await compressImage(file);
+      setPending(data, file.name, prettyBytes(data.length * 0.75));
+    } catch (err){
+      toast(err.message || "Upload failed.");
+    } finally {
+      empty.innerHTML = original;
+      empty.hidden = !!pendingImage;
+    }
+  }
+
+  uploadZone.addEventListener("click", ev => {
+    if (ev.target.closest("#upRemove")) return;
+    fileInput.click();
+  });
+  uploadZone.addEventListener("keydown", ev => {
+    if (ev.key === "Enter" || ev.key === " "){
+      ev.preventDefault();
+      fileInput.click();
+    }
+  });
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files && fileInput.files[0]) handleUpload(fileInput.files[0]);
+  });
+  $("#upRemove").addEventListener("click", ev => {
+    ev.stopPropagation();
+    fileInput.value = "";
+    setPending("");
+  });
+  ["dragenter","dragover"].forEach(type => uploadZone.addEventListener(type, ev => {
+    ev.preventDefault();
+    uploadZone.classList.add("drag");
+  }));
+  ["dragleave","dragend","drop"].forEach(type => uploadZone.addEventListener(type, ev => {
+    ev.preventDefault();
+    uploadZone.classList.remove("drag");
+  }));
+  uploadZone.addEventListener("drop", ev => {
+    const f = ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (f) handleUpload(f);
+  });
+
+  $("#addForm").addEventListener("submit", ev => {
+    ev.preventDefault();
+    const fd = new FormData(ev.target);
+    const name = String(fd.get("name") || "").trim();
+    if (!name){
+      $("#nameError").classList.add("show");
+      $("#fName").focus();
+      return;
+    }
+    $("#nameError").classList.remove("show");
+
+    const entry = sanitizeEntry({
+      id: nextId(),
+      name,
+      owner: fd.get("owner"),
+      instagram: fd.get("instagram"),
+      telegram: fd.get("telegram"),
+      country: fd.get("country"),
+      source: fd.get("source"),
+      image: pendingImage || fd.get("image"),
+      notes: fd.get("notes"),
+      status: adminUnlocked ? "approved" : "pending",
+      createdAt: Date.now()
+    });
+
+    const beforeAdd = entries.length;
+    entries.push(entry);
+    if (adminUnlocked) mergeDuplicates();
+    const mergedAway = entries.length <= beforeAdd;
+    if (!save()){
+      entries = entries.filter(x => x !== entry);
+      toast("Storage is full — try a smaller photo.");
+      return;
+    }
+    query = ""; $("#searchInput").value = "";
+    countryFilter = "all";
+    render();
+    if (adminUnlocked) renderAdminPanel();
+    closeModal("add");
+    toast(adminUnlocked
+      ? (mergedAway ? "Merged into an existing Protogen" : `Added ${entry.name}`)
+      : "Submitted — waiting for approval");
+
+    if (!mergedAway) setTimeout(() => {
+      const card = document.querySelector(`[data-open="${entry.id}"]`);
+      if (card){
+        card.scrollIntoView({ block:"center", behavior:"smooth" });
+        card.focus({ preventScroll:true });
+      }
+    }, 120);
+  });
+
+  /* ---------- toast ---------- */
+  function toast(msg){
+    const el = document.createElement("div");
+    el.className = "toast";
+    el.textContent = msg;
+    $("#toasts").appendChild(el);
+    setTimeout(() => {
+      el.classList.add("out");
+      setTimeout(() => el.remove(), 220);
+    }, 3000);
+  }
+
+  /* ---------- admin ---------- */
+  /*
+    The admin password is baked into this file so every device uses the same one.
+    There is no "set password" screen. To change it, open this page and run in
+    the browser console:
+        ProtodexAdmin.hashPassword("your new password").then(console.log)
+    then paste the printed salt and hash into ADMIN_CRED below and save the file.
+    Keep the password long: the hash ships with the page and can be attacked offline.
+  */
+  const ADMIN_CRED = Object.freeze({ salt: "NFhJAUjifOOO8V8ICpSnEQ==", hash: "Lidjey/gxv865RM9nyFXWmOcuO/gAuAjxcj4qwbf2OI=" });
+  const ADMIN_SESSION = "protodex.admin.session";
+  let adminUnlocked = false;
+  let adminTab = "pending";
+  const adminConfigured = () => !!(ADMIN_CRED.salt && ADMIN_CRED.hash);
+
+  const normName = s => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const normHandle = s => cleanHandle(s).toLowerCase();
+  function duplicateKey(e){
+    const handle = normHandle(e.instagram);
+    if (handle) return "ig:" + handle;
+    const name = normName(e.name);
+    return name ? "name:" + name : "id:" + e.id;
+  }
+  const STATUS_RANK = { approved: 3, pending: 2, rejected: 1 };
+
+  function mergeDuplicates(){
+    if (entries.length < 2) return false;
+
+    const groups = new Map();
+    entries.forEach(e => {
+      const key = duplicateKey(e);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(e);
+    });
+    if (groups.size === entries.length) return false;
+
+    const merged = [];
+    groups.forEach(list => {
+      if (list.length === 1){ merged.push(list[0]); return; }
+
+      const sorted = list.slice().sort((a, b) => a.id - b.id);
+      const base = sanitizeEntry(Object.assign({}, sorted[0]));
+      const allImages = [];
+
+      sorted.forEach(other => {
+        entryImages(other).forEach(img => {
+          if (img && !allImages.includes(img)) allImages.push(img);
+        });
+        ["owner", "instagram", "telegram", "source", "notes"].forEach(field => {
+          if (!base[field] && other[field]) base[field] = other[field];
+        });
+        if (base.country === "XX" && other.country !== "XX") base.country = other.country;
+        if (STATUS_RANK[other.status] > STATUS_RANK[base.status]) base.status = other.status;
+        if (other.createdAt && (!base.createdAt || other.createdAt < base.createdAt)) base.createdAt = other.createdAt;
+      });
+
+      base.images = allImages.slice(0, 12);
+      base.image = base.images[0] || "";
+      merged.push(base);
+    });
+
+    merged.sort((a, b) => a.id - b.id);
+    entries = merged;
+    return true;
+  }
+
+  function resolveCountry(raw){
+    if (!raw) return "XX";
+    const value = String(raw).trim();
+    if (!value) return "XX";
+    const up = value.toUpperCase();
+    if (COUNTRIES.some(c => c[0] === up)) return up;
+    const byName = COUNTRIES.find(c => c[1].toLowerCase() === value.toLowerCase());
+    return byName ? byName[0] : "XX";
+  }
+
+  function parseBulk(text){
+    const out = [];
+    String(text || "").split(/\r?\n/).forEach(raw => {
+      const line = raw.trim();
+      if (!line || line.startsWith("#")) return;
+      const parts = line.split("|").map(s => s.trim());
+      if (!parts[0] || parts[0].toLowerCase() === "name") return;
+      out.push({
+        name: parts[0],
+        instagram: parts[1] || "",
+        telegram: parts[2] || "",
+        country: resolveCountry(parts[3]),
+        source: parts[4] || "",
+        owner: parts[5] || ""
+      });
+    });
+    return out;
+  }
+
+  function bytesToB64(bytes){
+    let s = "";
+    for (const b of bytes) s += String.fromCharCode(b);
+    return btoa(s);
+  }
+
+  async function deriveHash(password, saltB64){
+    if (!(window.crypto && crypto.subtle)) throw new Error("Web Crypto is unavailable in this browser.");
+    const salt = Uint8Array.from(atob(saltB64), c => c.charCodeAt(0));
+    const key = await crypto.subtle.importKey(
+      "raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]
+    );
+    const bits = await crypto.subtle.deriveBits(
+      { name:"PBKDF2", salt, iterations:120000, hash:"SHA-256" }, key, 256
+    );
+    return bytesToB64(new Uint8Array(bits));
+  }
+
+  /* Console helper for rotating the baked-in password. */
+  window.ProtodexAdmin = {
+    async hashPassword(password){
+      if (String(password).length < 8) throw new Error("Use at least 8 characters.");
+      const saltB64 = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
+      const hash = await deriveHash(password, saltB64);
+      return `{ salt: "${saltB64}", hash: "${hash}" }`;
+    }
+  };
+
+  function showAdminGate(){
+    $("#adminGate").hidden = false;
+    $("#adminPanel").hidden = true;
+    $("#gateTitle").textContent = "Admin access";
+    $("#gateSub").textContent = adminConfigured()
+      ? "Enter the admin password to review submissions."
+      : "No admin password is configured in this file yet.";
+    $("#gateSubmit").textContent = "Unlock";
+    $("#gateSubmit").disabled = !adminConfigured();
+    $("#gatePass").value = "";
+    $("#gateError").textContent = adminConfigured() ? "" : "Add ADMIN_CRED (salt + hash) in index.html to enable the admin view.";
+    $("#gateError").classList.toggle("show", !adminConfigured());
+    $("#gatePass").setAttribute("autocomplete", "current-password");
+  }
+
+  function unlockAdmin(){
+    adminUnlocked = true;
+    try { sessionStorage.setItem(ADMIN_SESSION, "1"); } catch (err){ /* noop */ }
+    renderAdminPanel();
+    toast("Admin unlocked");
+  }
+
+  $("#gateForm").addEventListener("submit", async ev => {
+    ev.preventDefault();
+    const err = $("#gateError");
+    const pw = $("#gatePass").value;
+    err.classList.remove("show");
+    if (!adminConfigured()){
+      err.textContent = "Admin password is not configured in this file.";
+      err.classList.add("show");
+      return;
+    }
+    if (!pw){
+      err.textContent = "Enter your password.";
+      err.classList.add("show");
+      return;
+    }
+    try {
+      const hash = await deriveHash(pw, ADMIN_CRED.salt);
+      if (hash !== ADMIN_CRED.hash){
+        err.textContent = "Wrong password.";
+        err.classList.add("show");
+        $("#gatePass").select();
+        return;
+      }
+      unlockAdmin();
+    } catch (ex){
+      err.textContent = ex.message || "Could not verify the password.";
+      err.classList.add("show");
+    }
+  });
+
+  $("#lockBtn").addEventListener("click", () => {
+    adminUnlocked = false;
+    try { sessionStorage.removeItem(ADMIN_SESSION); } catch (err){ /* noop */ }
+    showAdminGate();
+    toast("Admin locked");
+  });
+
+  $("#adminTabs").addEventListener("click", ev => {
+    const tab = ev.target.closest("[data-tab]");
+    if (!tab) return;
+    adminTab = tab.dataset.tab;
+    renderAdminPanel();
+  });
+
+  $("#adminList").addEventListener("click", ev => {
+    const btn = ev.target.closest("[data-act]");
+    if (!btn) return;
+    const entry = entries.find(x => x.id === Number(btn.dataset.id));
+    if (!entry) return;
+    const act = btn.dataset.act;
+
+    if (act === "delete"){
+      if (!confirm(`Delete "${entry.name}" permanently?`)) return;
+      entries = entries.filter(x => x.id !== entry.id);
+      if (!save()){ toast("Could not save the change."); return; }
+      render(); renderAdminPanel();
+      toast(`Deleted ${entry.name}`);
+      return;
+    }
+
+    entry.status = act === "approve" ? "approved" : act === "reject" ? "rejected" : "pending";
+    const beforeMerge = entries.length;
+    mergeDuplicates();
+    const mergedAway = act === "approve" && entries.length < beforeMerge;
+    if (!save()){ toast("Could not save the change."); return; }
+    render(); renderAdminPanel();
+    toast(mergedAway
+      ? `Merged ${entry.name} into an existing Protogen`
+      : act === "approve" ? `Approved ${entry.name}` : act === "reject" ? `Rejected ${entry.name}` : `Unpublished ${entry.name}`);
+  });
+
+  function adminItemHTML(e){
+    const thumb = e.image
+      ? `<div class="admin-thumb"><img src="${esc(e.image)}" alt="" data-admin-fallback="1" /></div>`
+      : `<div class="admin-thumb na"><span style="font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:#a8a8a0">N/A</span></div>`;
+    const meta = [
+      `<span>#${pad(e.id)}</span>`,
+      `<span class="dot">·</span>`,
+      `<span>${esc(countryName(e.country))}</span>`,
+      e.owner ? `<span class="dot">·</span><span>${esc(e.owner)}</span>` : "",
+      e.createdAt ? `<span class="dot">·</span><span>${esc(new Date(e.createdAt).toLocaleDateString(undefined, { month:"short", day:"numeric", year:"numeric" }))}</span>` : ""
+    ].filter(Boolean).join("");
+    const links = [
+      e.instagram ? `<span>IG @${esc(e.instagram)}</span>` : "",
+      e.telegram ? `<span>TG @${esc(e.telegram)}</span>` : "",
+      e.source ? `<a href="${esc(e.source)}" target="_blank" rel="noopener noreferrer">${esc(domainOf(e.source))}</a>` : ""
+    ].filter(Boolean).join(`<span class="dot">·</span>`);
+
+    let actions = "";
+    if (e.status === "pending"){
+      actions = `<button class="btn btn-primary small" type="button" data-act="approve" data-id="${e.id}">Approve</button>
+                 <button class="btn btn-ghost small" type="button" data-act="reject" data-id="${e.id}">Reject</button>`;
+    } else if (e.status === "approved"){
+      actions = `<button class="btn btn-ghost small" type="button" data-act="unpublish" data-id="${e.id}">Unpublish</button>
+                 <button class="btn btn-danger small" type="button" data-act="delete" data-id="${e.id}">Delete</button>`;
+    } else {
+      actions = `<button class="btn btn-primary small" type="button" data-act="approve" data-id="${e.id}">Approve</button>
+                 <button class="btn btn-danger small" type="button" data-act="delete" data-id="${e.id}">Delete</button>`;
+    }
+
+    return `<div class="admin-item">
+      ${thumb}
+      <div class="admin-info">
+        <div class="admin-name">${esc(e.name)} <span class="status-pill ${esc(e.status)}">${esc(e.status)}</span></div>
+        <div class="admin-meta">${meta}</div>
+        ${links ? `<div class="admin-meta">${links}</div>` : ""}
+        ${e.notes ? `<p class="admin-notes">${esc(e.notes)}</p>` : ""}
+      </div>
+      <div class="admin-actions">${actions}</div>
+    </div>`;
+  }
+
+  function renderAdminPanel(){
+    if (!adminUnlocked) return;
+    $("#adminGate").hidden = true;
+    $("#adminPanel").hidden = false;
+
+    const pending = entries.filter(e => e.status === "pending");
+    const approved = entries.filter(e => e.status === "approved");
+    const rejected = entries.filter(e => e.status === "rejected");
+
+    $("#adminStats").innerHTML = [
+      ["Pending", pending.length],
+      ["Published", approved.length],
+      ["Rejected", rejected.length]
+    ].map(([label, value]) => `<div class="astat"><b>${value}</b><span>${label}</span></div>`).join("");
+
+    $("#adminTabs").innerHTML = [
+      ["pending", "Pending", pending.length],
+      ["approved", "Published", approved.length],
+      ["rejected", "Rejected", rejected.length]
+    ].map(([key, label, n]) => `<button class="tab ${adminTab === key ? "active" : ""}" type="button"
+        role="tab" aria-selected="${adminTab === key}" data-tab="${key}">${label} ${n}</button>`).join("");
+
+    const source = adminTab === "pending" ? pending : adminTab === "rejected" ? rejected : approved;
+    const items = source.slice().sort((a, b) => adminTab === "pending" ? a.createdAt - b.createdAt : b.createdAt - a.createdAt);
+
+    $("#adminList").innerHTML = items.length
+      ? items.map(adminItemHTML).join("")
+      : `<div class="admin-empty">${adminTab === "pending" ? "No submissions waiting for review." : adminTab === "rejected" ? "Nothing rejected." : "Nothing published yet."}</div>`;
+
+    $("#adminList").querySelectorAll("img[data-admin-fallback]").forEach(img => {
+      img.addEventListener("error", () => {
+        const box = img.parentElement;
+        box.classList.add("na");
+        box.innerHTML = `<span style="font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:#a8a8a0">N/A</span>`;
+      }, { once: true });
+    });
+  }
+
+  const LEGAL_PAGES = {
+    "#privacy": { key: "privacy", title: "Privacy Policy" },
+    "#cookies": { key: "cookies", title: "Cookie Policy" },
+    "#terms": { key: "terms", title: "Terms of Service" }
+  };
+
+  function closeOpenModals(){
+    ["add", "detail"].forEach(which => {
+      if ($("#" + which + "Modal").classList.contains("open")) closeModal(which);
+    });
+  }
+
+  function route(){
+    const isAdmin = location.hash === "#admin";
+    const isDiscovery = location.hash === "#discovery";
+    const legal = LEGAL_PAGES[location.hash] || null;
+
+    setNavOpen(false);
+
+    $("#discoveryView").hidden = !isDiscovery;
+    $("#adminView").hidden = !isAdmin;
+    $("#legalView").hidden = !legal;
+    document.querySelector("main").hidden = isAdmin || isDiscovery || !!legal;
+    document.body.classList.toggle("admin-mode", isAdmin || isDiscovery || !!legal);
+
+    document.querySelectorAll("[data-menu-link]").forEach(el => {
+      const href = el.getAttribute("href");
+      const active = (href === "#discovery" && isDiscovery) ||
+        (href === "#admin" && isAdmin) ||
+        (href === "#" && !isDiscovery && !isAdmin && !legal);
+      el.classList.toggle("active", active);
+      if (active) el.setAttribute("aria-current", "page");
+      else el.removeAttribute("aria-current");
+    });
+
+    if (isAdmin || isDiscovery || legal) closeOpenModals();
+
+    if (legal){
+      document.querySelectorAll("[data-legal]").forEach(el => {
+        el.hidden = el.dataset.legal !== legal.key;
+      });
+      document.querySelectorAll("[data-nav]").forEach(el => {
+        const active = el.dataset.nav === legal.key;
+        el.classList.toggle("active", active);
+        if (active) el.setAttribute("aria-current", "page");
+        else el.removeAttribute("aria-current");
+      });
+      document.title = legal.title + " — Protodex";
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    if (isDiscovery){
+      renderDiscovery();
+      document.title = "Discovery — Protodex";
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    document.title = isAdmin ? "Admin — Protodex" : "Protodex — Protogen Character Index";
+
+    if (isAdmin){
+      if (adminUnlocked) renderAdminPanel();
+      else showAdminGate();
+      window.scrollTo(0, 0);
+    }
+  }
+  window.addEventListener("hashchange", route);
+
+  /* ---------- bulk import ---------- */
+  const bulkText = $("#bulkText");
+  const bulkFiles = $("#bulkFiles");
+
+  function updateBulkSummary(){
+    const parsed = parseBulk(bulkText.value);
+    const files = bulkFiles.files ? Array.from(bulkFiles.files) : [];
+    const keys = new Set(parsed.map(p => normName(p.name)));
+    const matched = files.filter(f => keys.has(normName(f.name.replace(/\.[^.]+$/, "")))).length;
+
+    $("#bulkEmpty").hidden = files.length > 0;
+    $("#bulkFileInfo").hidden = files.length === 0;
+    if (files.length){
+      $("#bulkFileInfo").innerHTML = `${files.length} photo${files.length === 1 ? "" : "s"} selected · ${matched} matched
+        <button class="link-btn" type="button" id="bulkClear">Clear</button>`;
+    }
+    $("#bulkStatus").textContent = parsed.length
+      ? `${parsed.length} Protogen${parsed.length === 1 ? "" : "s"} detected${files.length ? ` · ${matched} photo${matched === 1 ? "" : "s"} will attach` : ""}`
+      : "";
+  }
+
+  bulkText.addEventListener("input", updateBulkSummary);
+  bulkFiles.addEventListener("change", updateBulkSummary);
+
+  $("#bulkDrop").addEventListener("click", ev => {
+    if (ev.target.closest("#bulkClear")) return;
+    bulkFiles.click();
+  });
+  $("#bulkDrop").addEventListener("keydown", ev => {
+    if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); bulkFiles.click(); }
+  });
+  $("#bulkFileInfo").addEventListener("click", ev => {
+    if (!ev.target.closest("#bulkClear")) return;
+    ev.stopPropagation();
+    bulkFiles.value = "";
+    updateBulkSummary();
+  });
+  ["dragenter","dragover"].forEach(type => $("#bulkDrop").addEventListener(type, ev => {
+    ev.preventDefault();
+    $("#bulkDrop").classList.add("drag");
+  }));
+  ["dragleave","dragend","drop"].forEach(type => $("#bulkDrop").addEventListener(type, ev => {
+    ev.preventDefault();
+    $("#bulkDrop").classList.remove("drag");
+  }));
+  $("#bulkDrop").addEventListener("drop", ev => {
+    const files = ev.dataTransfer.files;
+    if (files && files.length){
+      const dt = new DataTransfer();
+      for (const f of files) dt.items.add(f);
+      bulkFiles.files = dt.files;
+      updateBulkSummary();
+    }
+  });
+
+  $("#bulkToggle").addEventListener("click", () => {
+    const panel = $("#bulkPanel");
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden){
+      bulkText.focus();
+      updateBulkSummary();
+    }
+  });
+
+  $("#bulkImportBtn").addEventListener("click", async () => {
+    const parsed = parseBulk(bulkText.value);
+    if (!parsed.length){ toast("Nothing to import."); return; }
+
+    const existing = new Set(entries.map(duplicateKey));
+    const seen = new Set();
+    const fresh = parsed.filter(p => {
+      const key = duplicateKey(p);
+      if (existing.has(key) || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    if (!fresh.length){ toast("Those Protogens already exist."); return; }
+
+    const btn = $("#bulkImportBtn");
+    btn.disabled = true;
+    btn.textContent = "Importing…";
+
+    const created = [];
+    for (const p of fresh){
+      const entry = sanitizeEntry(Object.assign({}, p, {
+        id: nextId(), status: "approved", createdAt: Date.now()
+      }));
+      entries.push(entry);
+      created.push(entry);
+    }
+
+    const files = bulkFiles.files ? Array.from(bulkFiles.files) : [];
+    let matched = 0;
+    for (const file of files){
+      const key = normName(file.name.replace(/\.[^.]+$/, ""));
+      const target = created.find(e => !e.image && normName(e.name) === key);
+      if (!target) continue;
+      try {
+        target.image = await compressImage(file);
+        target.images = [target.image];
+        matched++;
+        $("#bulkStatus").textContent = `Processing photos… ${matched}`;
+      } catch (err){ /* skip unusable file */ }
+    }
+
+    if (!save()){
+      entries = entries.filter(e => !created.includes(e));
+      btn.disabled = false;
+      btn.textContent = "Import";
+      updateBulkSummary();
+      toast("Storage is full — import cancelled.");
+      return;
+    }
+
+    if (mergeDuplicates()) save();
+    bulkText.value = "";
+    bulkFiles.value = "";
+    $("#bulkFileInfo").innerHTML = "";
+    btn.disabled = false;
+    btn.textContent = "Import";
+    updateBulkSummary();
+    $("#bulkStatus").textContent = `Imported ${created.length} Protogen${created.length === 1 ? "" : "s"}${matched ? ` with ${matched} photo${matched === 1 ? "" : "s"}` : ""}.`;
+    render();
+    renderAdminPanel();
+    toast(`Imported ${created.length}${matched ? ` + ${matched} photo${matched === 1 ? "" : "s"}` : ""}`);
+  });
+
+  /* ---------- events ---------- */
+  $("#searchInput").addEventListener("input", ev => { query = ev.target.value; render(); });
+  $("#countryFilter").addEventListener("change", ev => { countryFilter = ev.target.value; render(); });
+  $("#discoverSort").addEventListener("change", ev => { discoverSort = ev.target.value; renderDiscovery(); });
+  $("#addBtn").addEventListener("click", openAdd);
+
+  /* ---------- discovery dropdown ---------- */
+  const navDrop = $("#navDrop");
+  const navDropBtn = $("#navDropBtn");
+  const navMenu = $("#navMenu");
+
+  function setNavOpen(open){
+    navDropBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    navMenu.hidden = !open;
+    navDrop.classList.toggle("open", open);
+  }
+
+  navDropBtn.addEventListener("click", ev => {
+    ev.stopPropagation();
+    setNavOpen(navDropBtn.getAttribute("aria-expanded") !== "true");
+  });
+  navMenu.addEventListener("click", ev => {
+    if (ev.target.closest("a")) setNavOpen(false);
+  });
+  document.addEventListener("click", ev => {
+    if (!navDrop.contains(ev.target)) setNavOpen(false);
+  });
+
+  document.querySelectorAll("[data-close]").forEach(el => {
+    el.addEventListener("click", () => closeModal(el.getAttribute("data-close")));
+  });
+
+  document.addEventListener("keydown", ev => {
+    if (ev.key === "Escape"){
+      setNavOpen(false);
+      if ($("#addModal").classList.contains("open")) closeModal("add");
+      else if ($("#detailModal").classList.contains("open")) closeModal("detail");
+    }
+    if (ev.key === "/" && document.activeElement !== $("#searchInput") &&
+        !document.querySelector("main").hidden &&
+        !$("#addModal").classList.contains("open") && !$("#detailModal").classList.contains("open")){
+      ev.preventDefault();
+      $("#searchInput").focus();
+    }
+  });
+
+  $("#exportBtn").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(entries, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "protodex.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    toast("Exported protodex.json");
+  });
+
+  /* ---------- boot ---------- */
+  const headerEl = document.querySelector("header.site");
+  const mainEl = document.querySelector("main");
+
+  function startApp(){
+    try { adminUnlocked = sessionStorage.getItem(ADMIN_SESSION) === "1"; } catch (err){ adminUnlocked = false; }
+    fillCountrySelect();
+    load();
+    render();
+    $("#year").textContent = new Date().getFullYear();
+    route();
+    if (!cookiesAccepted()) $("#cookieBanner").hidden = false;
+  }
+
+  const termsModal = $("#termsModal");
+  const termsAgree = $("#termsAgree");
+  const termsAccept = $("#termsAccept");
+
+  termsAgree.addEventListener("change", () => {
+    termsAccept.disabled = !termsAgree.checked;
+  });
+  termsAccept.addEventListener("click", () => {
+    acceptTerms();
+    termsModal.classList.remove("open");
+    termsModal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (headerEl) headerEl.hidden = false;
+    if (mainEl) mainEl.hidden = false;
+    startApp();
+  });
+
+  $("#acceptCookies").addEventListener("click", () => {
+    acceptCookies();
+    $("#cookieBanner").hidden = true;
+    if (entries.length) save();
+    $("#storageState").textContent = "Cookies accepted · saving enabled";
+    setTimeout(() => { if (cookiesAccepted()) $("#storageState").textContent = "Saved locally · 0 KB"; }, 1500);
+  });
+
+  if (!termsAccepted()){
+    termsModal.classList.add("open");
+    termsModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    if (headerEl) headerEl.hidden = true;
+    if (mainEl) mainEl.hidden = true;
+  } else {
+    startApp();
+  }
+})();
+</script>
+</body>
+</html>
