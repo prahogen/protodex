@@ -1208,6 +1208,79 @@
   const COOKIE_CONSENT = "protodex.cookies.accepted";
   const TERMS_ACCEPTED = "protodex.terms.accepted";
 
+  /* ---------- supabase (cloud) ---------- */
+  /* Fill these in with your Supabase project credentials */
+  const SUPABASE_URL = "https://your-project.supabase.co";
+  const SUPABASE_ANON_KEY = "your-anon-key-here";
+  const SUPABASE_TABLE = "protogens";
+  const SUPABASE_ENABLED = SUPABASE_URL && SUPABASE_URL !== "https://your-project.supabase.co" && SUPABASE_ANON_KEY && SUPABASE_ANON_KEY !== "your-anon-key-here";
+
+  async function sbRequest(method, path, body){
+    if (!SUPABASE_ENABLED) throw new Error("Supabase not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY in index.html.");
+    const url = `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}${path}`;
+    const headers = {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Prefer: "return=representation"
+    };
+    const opts = { method, headers };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(url, opts);
+    if (!res.ok){
+      const text = await res.text().catch(() => "");
+      throw new Error(`Supabase ${method}: ${res.status} ${text}`);
+    }
+    if (res.status === 204) return null;
+    return res.json();
+  }
+
+  async function fetchFromSupabase(){
+    const data = await sbRequest("GET", "?select=*&order=createdAt.desc");
+    entries = (data || []).map(row => sanitizeEntry({
+      id: row.id,
+      name: row.name,
+      owner: row.owner,
+      instagram: row.instagram,
+      telegram: row.telegram,
+      country: row.country,
+      source: row.source,
+      image: row.image || "",
+      images: row.images || (row.image ? [row.image] : []),
+      notes: row.notes,
+      status: row.status,
+      createdAt: row.createdAt ? new Date(row.createdAt).getTime() : 0
+    }));
+    const merged = mergeDuplicates();
+    if (merged) await syncToSupabase();
+    renderAdminPanel();
+  }
+
+  async function syncToSupabase(){
+    if (!SUPABASE_ENABLED) return false;
+    if (!entries.length){
+      await sbRequest("DELETE", "?id=is.not.null");
+      return true;
+    }
+    const payload = entries.map(e => ({
+      id: e.id,
+      name: e.name,
+      owner: e.owner,
+      instagram: e.instagram,
+      telegram: e.telegram,
+      country: e.country,
+      source: e.source,
+      image: e.image,
+      images: e.images,
+      notes: e.notes,
+      status: e.status,
+      createdAt: new Date(e.createdAt || Date.now()).toISOString()
+    }));
+    await sbRequest("POST", "?on_conflict=id", payload);
+    return true;
+  }
+
   function setConsent(name, value){
     try { localStorage.setItem(name, String(value)); } catch (err){ /* storage disabled */ }
   }
@@ -1298,36 +1371,66 @@
     };
   }
 
-  function load(){
-    let legacyKey = "";
-    try {
-      let raw = localStorage.getItem(STORE_KEY);
-      if (!raw){
-        for (const key of LEGACY_STORE_KEYS){
-          const legacy = localStorage.getItem(key);
-          if (legacy){ raw = legacy; legacyKey = key; break; }
-        }
-      }
-      if (raw){
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)){
-          entries = parsed.filter(e => e && e.name).map(sanitizeEntry);
-          const merged = mergeDuplicates();
-          if ((legacyKey || merged) && save() && legacyKey){
-            try { localStorage.removeItem(legacyKey); } catch (err){ /* noop */ }
-          }
-          return;
-        }
-      }
-    } catch (err){ console.warn("Protodex: read failed", err); }
+  async function load(){
     entries = [];
-    save();
+    if (SUPABASE_ENABLED){
+      try {
+        await fetchFromSupabase();
+      } catch (err){
+        console.warn("Protodex: supabase read failed", err);
+        $("#storageState").textContent = "Supabase read failed — check config";
+      }
+    } else {
+      let legacyKey = "";
+      try {
+        let raw = localStorage.getItem(STORE_KEY);
+        if (!raw){
+          for (const key of LEGACY_STORE_KEYS){
+            const legacy = localStorage.getItem(key);
+            if (legacy){ raw = legacy; legacyKey = key; break; }
+          }
+        }
+        if (raw){
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)){
+            entries = parsed.filter(e => e && e.name).map(sanitizeEntry);
+            const merged = mergeDuplicates();
+            const shouldSave = legacyKey || merged;
+            if (shouldSave){
+              await save();
+              if (legacyKey){
+                try { localStorage.removeItem(legacyKey); } catch (err){ /* noop */ }
+              }
+            }
+            return;
+          }
+        }
+      } catch (err){ console.warn("Protodex: read failed", err); }
+      entries = [];
+      await save();
+    }
+    render();
+    $("#year").textContent = new Date().getFullYear();
+    route();
+    if (!cookiesAccepted()) $("#cookieBanner").hidden = false;
   }
 
-  function save(){
+  async function save(){
     if (!cookiesAccepted()){
       $("#storageState").textContent = "Accept cookies to save data";
       return false;
+    }
+    if (SUPABASE_ENABLED){
+      try {
+        const ok = await syncToSupabase();
+        const n = entries.length;
+        $("#storageState").textContent = `Synced to Supabase · ${n} Protogen${n === 1 ? "" : "s"}`;
+        return ok;
+      } catch (err){
+        console.warn("Protodex: supabase write failed", err);
+        $("#storageState").textContent = "Supabase write failed";
+        return false;
+      }
     }
     try {
       const raw = JSON.stringify(entries);
@@ -1782,7 +1885,7 @@
     if (f) handleUpload(f);
   });
 
-  $("#addForm").addEventListener("submit", ev => {
+  $("#addForm").addEventListener("submit", async ev => {
     ev.preventDefault();
     const fd = new FormData(ev.target);
     const name = String(fd.get("name") || "").trim();
@@ -1811,9 +1914,9 @@
     entries.push(entry);
     if (adminUnlocked) mergeDuplicates();
     const mergedAway = entries.length <= beforeAdd;
-    if (!save()){
+    if (!await save()){
       entries = entries.filter(x => x !== entry);
-      toast("Storage is full — try a smaller photo.");
+      toast("Could not save — check Supabase config.");
       return;
     }
     query = ""; $("#searchInput").value = "";
@@ -2035,7 +2138,7 @@
     renderAdminPanel();
   });
 
-  $("#adminList").addEventListener("click", ev => {
+  $("#adminList").addEventListener("click", async ev => {
     const btn = ev.target.closest("[data-act]");
     if (!btn) return;
     const entry = entries.find(x => x.id === Number(btn.dataset.id));
@@ -2045,7 +2148,7 @@
     if (act === "delete"){
       if (!confirm(`Delete "${entry.name}" permanently?`)) return;
       entries = entries.filter(x => x.id !== entry.id);
-      if (!save()){ toast("Could not save the change."); return; }
+      if (!await save()){ toast("Could not save the change."); return; }
       render(); renderAdminPanel();
       toast(`Deleted ${entry.name}`);
       return;
@@ -2055,7 +2158,7 @@
     const beforeMerge = entries.length;
     mergeDuplicates();
     const mergedAway = act === "approve" && entries.length < beforeMerge;
-    if (!save()){ toast("Could not save the change."); return; }
+    if (!await save()){ toast("Could not save the change."); return; }
     render(); renderAdminPanel();
     toast(mergedAway
       ? `Merged ${entry.name} into an existing Protogen`
@@ -2315,16 +2418,16 @@
       } catch (err){ /* skip unusable file */ }
     }
 
-    if (!save()){
+    if (!await save()){
       entries = entries.filter(e => !created.includes(e));
       btn.disabled = false;
       btn.textContent = "Import";
       updateBulkSummary();
-      toast("Storage is full — import cancelled.");
+      toast("Could not import — check Supabase config.");
       return;
     }
 
-    if (mergeDuplicates()) save();
+    if (mergeDuplicates()) await save();
     bulkText.value = "";
     bulkFiles.value = "";
     $("#bulkFileInfo").innerHTML = "";
@@ -2434,11 +2537,10 @@
   const headerEl = document.querySelector("header.site");
   const mainEl = document.querySelector("main");
 
-  function startApp(){
+  async function startApp(){
     try { adminUnlocked = sessionStorage.getItem(ADMIN_SESSION) === "1"; } catch (err){ adminUnlocked = false; }
     fillCountrySelect();
-    load();
-    render();
+    await load();
     $("#year").textContent = new Date().getFullYear();
     route();
     if (!cookiesAccepted()) $("#cookieBanner").hidden = false;
@@ -2451,7 +2553,7 @@
   termsAgree.addEventListener("change", () => {
     termsAccept.disabled = !termsAgree.checked;
   });
-  termsAccept.addEventListener("click", () => {
+  termsAccept.addEventListener("click", async () => {
     acceptTerms();
     termsModal.classList.remove("open");
     termsModal.setAttribute("aria-hidden", "true");
@@ -2459,10 +2561,10 @@
     if (headerEl) headerEl.hidden = false;
     if (mainEl) mainEl.hidden = false;
     initTheme();
-    startApp();
+    await startApp();
   });
 
-  $("#termsDecline").addEventListener("click", () => {
+  $("#termsDecline").addEventListener("click", async () => {
     acceptTerms();
     termsModal.classList.remove("open");
     termsModal.setAttribute("aria-hidden", "true");
@@ -2470,15 +2572,15 @@
     if (headerEl) headerEl.hidden = false;
     if (mainEl) mainEl.hidden = false;
     initTheme();
-    startApp();
+    await startApp();
   });
 
-  $("#acceptCookies").addEventListener("click", () => {
+  $("#acceptCookies").addEventListener("click", async () => {
     acceptCookies();
     $("#cookieBanner").hidden = true;
-    if (entries.length) save();
+    if (entries.length) await save();
     $("#storageState").textContent = "Cookies accepted · saving enabled";
-    setTimeout(() => { if (cookiesAccepted()) $("#storageState").textContent = "Saved locally · 0 KB"; }, 1500);
+    setTimeout(() => { if (cookiesAccepted()) $("#storageState").textContent = "Synced to Supabase · 0 Protogens"; }, 1500);
   });
 
   if (!termsAccepted()){
